@@ -28,10 +28,11 @@ export class HitBox {
 }
 
 export function isOverlaid(hitBox, obstacles) {
+    var output = false
     obstacles.forEach(obstacle => {
         if (hitBox.coordinate.x + hitBox.width > obstacle.coordinate.x && hitBox.coordinate.x < obstacle.coordinate.x + obstacle.width && hitBox.coordinate.y + hitBox.height > obstacle.coordinate.y && hitBox.coordinate.y < obstacle.coordinate.y + obstacle.height) {
-            return true;
+            output = true;
         }
     });
-    return false;
+    return output;
 }
