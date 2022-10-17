@@ -37,17 +37,20 @@ function keyUpHandler(e) {
     }
 }
 
-var player = new Player(new Coordinate({x: canvas.width*0.5, y: canvas.height*0.2}));
+var player = new Player(new Coordinate({x: canvas.width*0.5, y: 0}));
 var floor = new Block(new Coordinate({x: 0, y: canvas.height*0.9}), canvas.width, canvas.height*0.1);
-var block = new Block(new Coordinate({x: canvas.width*0.5, y: canvas.height*0.6}), canvas.width*0.5, 10);
-var obstacles = [floor, block];
+var block1 = new Block(new Coordinate({x: canvas.width*0.5, y: canvas.height*0.7}), canvas.width*0.5, 10);
+var block2 = new Block(new Coordinate({x: 0, y: canvas.height*0.5}), canvas.width*0.5, 10);
+var block3 = new Block(new Coordinate({x: canvas.width*0.5, y: canvas.height*0.3}), canvas.width*0.5, 10);
+var obstacles = [floor, block1, block2, block3];
 
 function update() {
     player.update(canvas, obstacles, rightPressed, leftPressed, upPressed);
     
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    floor.draw(ctx);
-    block.draw(ctx);
+    obstacles.forEach(obstacle => {
+        obstacle.draw(ctx);
+    });
     player.draw(ctx);
 }
 
