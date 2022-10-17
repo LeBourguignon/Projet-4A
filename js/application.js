@@ -39,9 +39,9 @@ function keyUpHandler(e) {
 
 var player = new Player(new Coordinate({x: canvas.width*0.5, y: 0}));
 var floor = new Block(new Coordinate({x: 0, y: canvas.height*0.9}), canvas.width, canvas.height*0.1);
-var block1 = new Block(new Coordinate({x: canvas.width*0.5, y: canvas.height*0.7}), canvas.width*0.5, 10);
-var block2 = new Block(new Coordinate({x: 0, y: canvas.height*0.5}), canvas.width*0.5, 10);
-var block3 = new Block(new Coordinate({x: canvas.width*0.5, y: canvas.height*0.3}), canvas.width*0.5, 10);
+var block1 = new Block(new Coordinate({x: canvas.width*0.6, y: canvas.height*0.7}), canvas.width*0.4, 10);
+var block2 = new Block(new Coordinate({x: 0, y: canvas.height*0.5}), canvas.width*0.4, 10);
+var block3 = new Block(new Coordinate({x: canvas.width*0.6, y: canvas.height*0.3}), canvas.width*0.4, 10);
 var obstacles = [floor, block1, block2, block3];
 
 function update() {
