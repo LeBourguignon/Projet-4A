@@ -4,18 +4,18 @@ import { Player } from "./player.js";
 import { UpdatableHitBox } from "./updatableHitBox.js";
 
 export type Keys = { upPressed: Boolean, leftPressed: Boolean, rightPressed: boolean }
-export type Map = { drawables: [Drawable], updatables: [UpdatableHitBox], player: Player, obstacles: [HitBox] }
+export type Map = { drawables: Drawable[], updatables: UpdatableHitBox[], player: Player, obstacles: HitBox[] }
 
 export class Level {
     #canvas: HTMLCanvasElement;
     #ctx: CanvasRenderingContext2D | null;
     #keys: Keys;
 
-    #drawables: [Drawable];
-    #updatables: [UpdatableHitBox];
+    #drawables: Drawable[];
+    #updatables: UpdatableHitBox[];
 
     #player: Player;
-    #obstacles: [HitBox];
+    #obstacles: HitBox[];
 
     constructor(canvas: HTMLCanvasElement, keys: Keys, level: Map) {
         this.#canvas = canvas;
@@ -23,17 +23,22 @@ export class Level {
 
         this.#keys = keys;
 
+        this.#drawables = level.drawables;
+        this.#updatables = level.updatables;
+        /*
         level.drawables.forEach(drawable => {
             this.#drawables.push(drawable);
         });
         level.updatables.forEach(updatable => {
             this.#updatables.push(updatable);
         });
-
-        this.#player = level.player;
         level.obstacles.forEach(obstacle => {
             this.#obstacles.push(obstacle);
         });
+        */
+
+        this.#player = level.player;
+        this.#obstacles = level.obstacles;
     }
 
     set canvas(value: HTMLCanvasElement) { this.#canvas = value; }
@@ -45,17 +50,17 @@ export class Level {
     set keys(value: Keys) { this.#keys = value; }
     get keys(): Keys { return this.#keys; }
 
-    set drawables(value: [Drawable]) { this.#drawables = value; }
-    get drawables(): [Drawable] { return this.#drawables; }
+    set drawables(value: Drawable[]) { this.#drawables = value; }
+    get drawables(): Drawable[] { return this.#drawables; }
     
-    set updatables(value: [UpdatableHitBox]) { this.#updatables = value; }
-    get updatables(): [UpdatableHitBox] { return this.#updatables; }
+    set updatables(value: UpdatableHitBox[]) { this.#updatables = value; }
+    get updatables(): UpdatableHitBox[] { return this.#updatables; }
 
     set player(value: Player) { this.#player = value; }
     get player(): Player { return this.#player; }
     
-    set obstacles(value: [HitBox]) { this.#obstacles = value; }
-    get obstacles(): [HitBox] { return this.#obstacles; }
+    set obstacles(value: HitBox[]) { this.#obstacles = value; }
+    get obstacles(): HitBox[] { return this.#obstacles; }
 
     draw() {
         this.#drawables.forEach(drawable => {

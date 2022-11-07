@@ -1,0 +1,21 @@
+{
+  "name": "projet-4a",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeBourguignon/Projet-4A.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LeBourguignon/Projet-4A/issues"
+  },
+  "homepage": "https://github.com/LeBourguignon/Projet-4A#readme"
+}

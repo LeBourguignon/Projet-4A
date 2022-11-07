@@ -17,7 +17,7 @@ export class Player extends UpdatableHitBox {
         super({coordinate: coordinate, width: playerWidth, height: playerHeight});
     }
 
-    #right(canvas, obstacles, rightPressed) {
+    #right(canvas: HTMLCanvasElement, obstacles: HitBox[], rightPressed: Boolean) {
         if(rightPressed && this._coordinate.x < canvas.width - this._width) {
             var nextHitBox = new HitBox(this);
             var i = 0, x0 = this._coordinate.x;
@@ -34,7 +34,7 @@ export class Player extends UpdatableHitBox {
         }
     }
 
-    #left(canvas, obstacles, leftPressed) {
+    #left(canvas: HTMLCanvasElement, obstacles: HitBox[], leftPressed: Boolean) {
         if(leftPressed && this._coordinate.x > 0) {
             var nextHitBox = new HitBox(this);
             var i = 0, x0 = this._coordinate.x;
@@ -51,7 +51,7 @@ export class Player extends UpdatableHitBox {
         }
     }
 
-    #fallAndJump(canvas, obstacles, upPressed) {
+    #fallAndJump(canvas: HTMLCanvasElement, obstacles: HitBox[], upPressed: Boolean) {
         var nextHitBox = new HitBox(this);
         nextHitBox.coordinate = new Coordinate({x: nextHitBox.coordinate.x, y: nextHitBox.coordinate.y + 1});
         if(nextHitBox.areOverlaid(obstacles)) {
@@ -81,7 +81,7 @@ export class Player extends UpdatableHitBox {
                 var i = 0, y0 = this._coordinate.y;
                 while(i < this.#jumping) {
                     nextHitBox.coordinate = new Coordinate({x: nextHitBox.coordinate.x, y: y0 - i});
-                    if(!nextHitBox.isOverlaid(obstacles)) {
+                    if(!nextHitBox.areOverlaid(obstacles)) {
                         this._coordinate.y = nextHitBox.coordinate.y;
                     }
                     else {

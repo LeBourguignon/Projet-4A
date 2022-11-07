@@ -28,7 +28,7 @@ export class HitBox extends Drawable {
         return this.coordinate.x + this.width > hitBox.coordinate.x && this.coordinate.x < hitBox.coordinate.x + hitBox.width && this.coordinate.y + this.height > hitBox.coordinate.y && this.coordinate.y < hitBox.coordinate.y + hitBox.height;
     }
 
-    areOverlaid(hitBoxs: [HitBox]): Boolean {
+    areOverlaid(hitBoxs: HitBox[]): Boolean {
         var output = false
         hitBoxs.forEach(hitBox => {
             if (this.isOverlaid(hitBox)) {
