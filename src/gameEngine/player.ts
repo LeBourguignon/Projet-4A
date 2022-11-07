@@ -1,15 +1,20 @@
-import { Coordinate } from "./coordinate.js";
-import { HitBox, isOverlaid } from "./hitBox.js";
+import { Coord, Coordinate } from "./coordinate.js";
+import { HitBox } from "./hitBox.js";
+import { Level } from "./level.js";
+import { UpdatableHitBox } from "./updatableHitBox.js";
 
-export class Player extends HitBox {
-    #speed = 5;
-    #jumpBoost = 20;
+export const playerWidth = 20;
+export const playerHeight = 20;
 
-    #jumping = 0;
-    #falling = 0;
+export class Player extends UpdatableHitBox {
+    #speed: number = 5;
+    #jumpBoost: number = 20;
 
-    constructor(coordinate) {
-        super(new HitBox({ coordinate: coordinate, width: 20, height: 20}));
+    #jumping: number = 0;
+    #falling: number = 0;
+
+    constructor(coordinate: Coord) {
+        super({coordinate: coordinate, width: playerWidth, height: playerHeight});
     }
 
     #right(canvas, obstacles, rightPressed) {
@@ -19,7 +24,7 @@ export class Player extends HitBox {
             while(i < this.#speed) {
                 i++;
                 nextHitBox.coordinate = new Coordinate({x: x0 + i, y: nextHitBox.coordinate.y});
-                if(!isOverlaid(nextHitBox, obstacles)) {
+                if(!nextHitBox.areOverlaid(obstacles)) {
                     this._coordinate.x = nextHitBox.coordinate.x;
                 }
                 else {
@@ -36,7 +41,7 @@ export class Player extends HitBox {
             while(i < this.#speed) {
                 i++;
                 nextHitBox.coordinate = new Coordinate({x: x0 - i, y: nextHitBox.coordinate.y});
-                if(!isOverlaid(nextHitBox, obstacles)) {
+                if(!nextHitBox.areOverlaid(obstacles)) {
                     this._coordinate.x = nextHitBox.coordinate.x;
                 }
                 else {
@@ -49,7 +54,7 @@ export class Player extends HitBox {
     #fallAndJump(canvas, obstacles, upPressed) {
         var nextHitBox = new HitBox(this);
         nextHitBox.coordinate = new Coordinate({x: nextHitBox.coordinate.x, y: nextHitBox.coordinate.y + 1});
-        if(isOverlaid(nextHitBox, obstacles)) {
+        if(nextHitBox.areOverlaid(obstacles)) {
             if(this.#falling > 0) {
                 this.#falling = 0;
             }
@@ -59,7 +64,7 @@ export class Player extends HitBox {
                 var i = 0, y0 = this._coordinate.y;
                 while(i < this.#jumping) {
                     nextHitBox.coordinate = new Coordinate({x: nextHitBox.coordinate.x, y: y0 - i});
-                    if(!isOverlaid(nextHitBox, obstacles)) {
+                    if(!nextHitBox.areOverlaid(obstacles)) {
                         this._coordinate.y = nextHitBox.coordinate.y;
                     }
                     else {
@@ -76,7 +81,7 @@ export class Player extends HitBox {
                 var i = 0, y0 = this._coordinate.y;
                 while(i < this.#jumping) {
                     nextHitBox.coordinate = new Coordinate({x: nextHitBox.coordinate.x, y: y0 - i});
-                    if(!isOverlaid(nextHitBox, obstacles)) {
+                    if(!nextHitBox.isOverlaid(obstacles)) {
                         this._coordinate.y = nextHitBox.coordinate.y;
                     }
                     else {
@@ -93,7 +98,7 @@ export class Player extends HitBox {
                 while(i < this.#falling && this.#falling < canvas.height) {
                     i++;
                     nextHitBox.coordinate = new Coordinate({x: nextHitBox.coordinate.x, y: y0 + i});
-                    if(!isOverlaid(nextHitBox, obstacles)) {
+                    if(!nextHitBox.areOverlaid(obstacles)) {
                         this._coordinate.y = nextHitBox.coordinate.y;
                     }
                     else {
@@ -105,13 +110,13 @@ export class Player extends HitBox {
         }
     }
 
-    update(canvas, obstacles, rightPressed, leftPressed, upPressed) {
-        this.#right(canvas, obstacles, rightPressed);
-        this.#left(canvas, obstacles, leftPressed);
-        this.#fallAndJump(canvas, obstacles, upPressed);
+    update(level: Level) {
+        this.#right(level.canvas, level.obstacles, level.keys.rightPressed);
+        this.#left(level.canvas, level.obstacles, level.keys.leftPressed);
+        this.#fallAndJump(level.canvas, level.obstacles, level.keys.upPressed);
     }
 
-    draw(ctx) {
+    draw(ctx: CanvasRenderingContext2D) {
         ctx.beginPath();
         ctx.rect(this._coordinate.x, this._coordinate.y, this._width, this._height);
         ctx.fillStyle = "#0000FF";
