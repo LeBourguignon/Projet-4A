@@ -1,7 +1,7 @@
 import { Coord, Coordinate } from "./coordinate.js";
 import { Drawable } from "./drawable.js";
 
-export type Rectangle = { coordinate: Coord, width: number, height }
+export type Rectangle = { coordinate: Coord, width: number, height: number }
 
 export class HitBox extends Drawable {
     _coordinate: Coordinate;

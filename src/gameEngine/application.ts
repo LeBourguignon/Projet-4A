@@ -16,7 +16,7 @@ var level = new Level(canvas, {upPressed: false, leftPressed: false, rightPresse
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
-function keyDownHandler(e) {
+function keyDownHandler(e: KeyboardEvent) {
     if(e.keyCode == 39 || e.keyCode == 68) {
         level.keys.rightPressed = true;
     }
@@ -28,14 +28,15 @@ function keyDownHandler(e) {
     }
 }
 
-function keyUpHandler(e) {
-    if(e.keyCode == 39 || e.keyCode == 68) {
+function keyUpHandler(e: KeyboardEvent) {
+    e.key
+    if(e.key === "ArrowRight" || e.key === 'd') {
         level.keys.rightPressed = false;
     }
-    if(e.keyCode == 37 || e.keyCode == 81) {
+    if(e.key === "ArrowLeft" || e.key === 'q') {
         level.keys.leftPressed = false;
     }
-    if(e.keyCode == 38 || e.keyCode == 90) {
+    if(e.key === "ArrowUp" || e.key === 'z') {
         level.keys.upPressed = false;
     }
 }
