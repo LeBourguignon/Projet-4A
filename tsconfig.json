@@ -1,21 +1,11 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "es2019",
+    "outDir": "./dist/",
     "noImplicitAny": true,
-    "sourceMap": true,
-    "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "*": [
-        "node_modules/*"
-      ]
-    },
-    "skipLibCheck": true
-  },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+    "module": "es6",
+    "target": "ESNext",
+    "allowJs": true,
+    "moduleResolution": "node",
+    "sourceMap": true
+  }
 }
