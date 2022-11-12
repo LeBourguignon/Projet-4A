@@ -1,21 +1,31 @@
-import { HitBox, Rectangle } from "./hitBox.js";
+import { Graphics } from "pixi.js";
+import { HitBox, Rectangle } from "./hitBox";
+import { Level } from "./level";
 
 export class StaticColorBlock extends HitBox {
-    #color: string;
+    #color: number;
+    #graphics: Graphics
 
-    constructor(hitBox: Rectangle, color: string) {
+    constructor(hitBox: Rectangle, color: number) {
         super(hitBox);
         this.#color = color;
+
+        this.#graphics = new Graphics();
+        this.#graphics.beginFill(this.#color);
+        this.#graphics.drawRect(0, 0, this._width, this._height);
+        this.#graphics.endFill();
+        this.#graphics.x = this._coordinate.x;
+        this.#graphics.y = this._coordinate.y;
     }
 
-    set color(value: string) { this.#color = value; }
-    get color(): string { return this.#color; }
-    
-    draw(ctx: CanvasRenderingContext2D) {
-        ctx.beginPath();
-        ctx.rect(this.coordinate.x, this.coordinate.y, this.width, this.height);
-        ctx.fillStyle = this.#color;
-        ctx.fill();
-        ctx.closePath();
+    addToStage(level: Level) {
+        this.#graphics.x = this._coordinate.x + level.camCoordinate.x;
+        this.#graphics.y = this._coordinate.y + level.camCoordinate.y;
+        level.app.stage.addChild(this.#graphics);
+    }
+
+    update(level: Level, delta: number) {
+        this.#graphics.x = this._coordinate.x + level.camCoordinate.x;
+        this.#graphics.y = this._coordinate.y + level.camCoordinate.y;
     }
 }

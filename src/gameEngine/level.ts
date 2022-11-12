@@ -1,60 +1,44 @@
-import { Drawable } from "./drawable.js";
-import { HitBox } from "./hitBox.js";
-import { Player } from "./player.js";
-import { UpdatableHitBox } from "./updatableHitBox.js";
+import { Application, ICanvas } from "pixi.js";
+import { Coordinate } from "./coordinate";
+import { HitBox } from "./hitBox";
+import { Player } from "./player";
 
-export type Keys = { upPressed: Boolean, leftPressed: Boolean, rightPressed: boolean }
-export type Map = { drawables: Drawable[], updatables: UpdatableHitBox[], player: Player, obstacles: HitBox[] }
+export type Keys = { upPressed: Boolean, downPressed: Boolean, rightPressed: boolean, leftPressed: Boolean }
+export type Map = { drawables: HitBox[], obstacles: HitBox[], player: Player, camCoordinate: Coordinate }
 
 export class Level {
-    #canvas: HTMLCanvasElement;
-    #ctx: CanvasRenderingContext2D | null;
+    #app: Application<ICanvas>
     #keys: Keys;
 
-    #drawables: Drawable[];
-    #updatables: UpdatableHitBox[];
-
-    #player: Player;
+    #drawables: HitBox[]
     #obstacles: HitBox[];
+    #player: Player;
 
-    constructor(canvas: HTMLCanvasElement, keys: Keys, level: Map) {
-        this.#canvas = canvas;
-        this.#ctx = canvas.getContext("2d");
+    #camCoordinate: Coordinate;
+    #elapsed = 0.0;
 
-        this.#keys = keys;
+    constructor(app: Application<ICanvas>, level: Map) {
+        this.#app = app;
+        this.#keys = { upPressed: false, downPressed: false, rightPressed: false, leftPressed: false};
 
         this.#drawables = level.drawables;
-        this.#updatables = level.updatables;
-        /*
-        level.drawables.forEach(drawable => {
-            this.#drawables.push(drawable);
-        });
-        level.updatables.forEach(updatable => {
-            this.#updatables.push(updatable);
-        });
-        level.obstacles.forEach(obstacle => {
-            this.#obstacles.push(obstacle);
-        });
-        */
-
         this.#player = level.player;
         this.#obstacles = level.obstacles;
+        this.#camCoordinate = level.camCoordinate;
+
+        this.#drawables.forEach(drawable => {
+            drawable.addToStage(this);
+        });
     }
 
-    set canvas(value: HTMLCanvasElement) { this.#canvas = value; }
-    get canvas(): HTMLCanvasElement { return this.#canvas; }
-
-    set ctx(value: CanvasRenderingContext2D | null) { this.#ctx = value; }
-    get ctx(): CanvasRenderingContext2D | null { return this.#ctx; }
+    set app(value: Application<ICanvas>) { this.#app = value; }
+    get app(): Application<ICanvas> { return this.#app; }
 
     set keys(value: Keys) { this.#keys = value; }
     get keys(): Keys { return this.#keys; }
 
-    set drawables(value: Drawable[]) { this.#drawables = value; }
-    get drawables(): Drawable[] { return this.#drawables; }
-    
-    set updatables(value: UpdatableHitBox[]) { this.#updatables = value; }
-    get updatables(): UpdatableHitBox[] { return this.#updatables; }
+    set drawables(value: HitBox[]) { this.#drawables = value; }
+    get drawables(): HitBox[] { return this.#drawables; }
 
     set player(value: Player) { this.#player = value; }
     get player(): Player { return this.#player; }
@@ -62,15 +46,13 @@ export class Level {
     set obstacles(value: HitBox[]) { this.#obstacles = value; }
     get obstacles(): HitBox[] { return this.#obstacles; }
 
-    draw() {
-        this.#drawables.forEach(drawable => {
-            drawable.draw(this.#ctx);
-        });
-    }
+    set camCoordinate(value: Coordinate) { this.#camCoordinate = value; }
+    get camCoordinate(): Coordinate { return this.#camCoordinate; }
 
-    update() {
-        this.#updatables.forEach(updatable => {
-            updatable.update(this);
+    update(delta: number) {
+        this.#elapsed += delta;
+        this.#drawables.forEach(drawable => {
+            drawable.update(this, delta);
         });
     }
 }
