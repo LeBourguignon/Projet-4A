@@ -6,9 +6,9 @@ import { Level } from "./level";
 export const playerWidth = 30;
 export const playerHeight = 30;
 
-export const playerSpeed = 20;
-export const playerJumpBoost = 60;
-export const playerWeight = 5;
+export const playerSpeed = 5;
+export const playerJumpBoost = 20;
+export const playerWeight = 1;
 
 export class Player extends HitBox {
     #speed: number = playerSpeed;
@@ -17,6 +17,7 @@ export class Player extends HitBox {
 
     #vy: number = 0;
     #secondJump: boolean = false;
+    #upClicked: boolean = false;
 
     #graphics: Graphics;
 
@@ -76,7 +77,7 @@ export class Player extends HitBox {
     }
 
     #updateY(level: Level, delta: number) {
-        if(level.keys.downPressed)
+        if (level.keys.downPressed)
             this.#weight = playerWeight*2;
         else
             this.#weight = playerWeight;
@@ -107,7 +108,7 @@ export class Player extends HitBox {
             }
         }
         else {
-            if (this.#secondJump && level.keys.upPressed && this.#vy > -this.#jumpBoost/8) {
+            if (this.#secondJump && this.#upClicked && level.keys.upPressed) {
                 this.#vy = -this.#jumpBoost;
                 nextHitBox = new HitBox(this);
                 var i = 0, y0 = this._coordinate.y;
@@ -155,5 +156,6 @@ export class Player extends HitBox {
                 this.#vy += this.#weight*delta;
             }
         }
+        this.#upClicked = !level.keys.upPressed;
     }
 }
