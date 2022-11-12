@@ -76,6 +76,11 @@ export class Player extends HitBox {
     }
 
     #updateY(level: Level, delta: number) {
+        if(level.keys.downPressed)
+            this.#weight = playerWeight*2;
+        else
+            this.#weight = playerWeight;
+            
         var nextHitBox = new HitBox(this);
         nextHitBox.coordinate = new Coordinate({x: nextHitBox.coordinate.x, y: nextHitBox.coordinate.y + 1});
         if(nextHitBox.areOverlaid(level.obstacles)) {
