@@ -1,10 +1,10 @@
-import { Graphics } from "pixi.js";
+import { AnimatedSprite, Graphics, ObservablePoint, Sprite, Texture } from "pixi.js";
 import { Coord, Coordinate } from "./coordinate";
 import { HitBox } from "./hitBox";
 import { Level } from "./level";
 
-export const playerWidth = 30;
-export const playerHeight = 30;
+export const playerWidth = 75;
+export const playerHeight = 150;
 
 export const playerSpeed = 5;
 export const playerJumpBoost = 20;
@@ -15,11 +15,16 @@ export class Player extends HitBox {
     #jumpBoost: number = playerJumpBoost;
     #weight: number = playerWeight;
 
+    #vx: number = 0;
     #vy: number = 0;
     #secondJump: boolean = false;
     #upClicked: boolean = false;
 
     #graphics: Graphics;
+    #currentSprite: AnimatedSprite;
+    #idle: Texture[];
+    #spriteTime: number = 25;
+    #spriteNumber: number = 0;
 
     constructor(coordinate: Coord) {
         super({coordinate: coordinate, width: playerWidth, height: playerHeight});
@@ -28,12 +33,20 @@ export class Player extends HitBox {
         this.#graphics.beginFill(0x0000FF);
         this.#graphics.drawRect(0, 0, this._width, this._height);
         this.#graphics.endFill();
+
+        this.#idle = [Texture.from('assets/player/idle/adventurer-idle-00.png'), Texture.from('assets/player/idle/adventurer-idle-01.png'), Texture.from('assets/player/idle/adventurer-idle-02.png'), Texture.from('assets/player/idle/adventurer-idle-03.png')];
+        
+        this.#currentSprite = new AnimatedSprite(this.#idle);
+        this.#currentSprite.scale.set(5, 5);
     }
 
     addToStage(level: Level) {
         this.#graphics.x = this._coordinate.x + level.camCoordinate.x;
         this.#graphics.y = this._coordinate.y + level.camCoordinate.y;
-        level.app.stage.addChild(this.#graphics);
+        //level.app.stage.addChild(this.#graphics);
+        this.#currentSprite.x = this._coordinate.x + level.camCoordinate.x;
+        this.#currentSprite.y = this._coordinate.y + level.camCoordinate.y;
+        level.app.stage.addChild(this.#currentSprite);
     }
 
     update(level: Level, delta: number) {
@@ -41,36 +54,31 @@ export class Player extends HitBox {
         this.#updateY(level, delta);
         this.#graphics.x = this._coordinate.x + level.camCoordinate.x;
         this.#graphics.y = this._coordinate.y + level.camCoordinate.y;
+        this.#currentSprite.x = this._coordinate.x + level.camCoordinate.x - 85;
+        this.#currentSprite.y = this._coordinate.y + level.camCoordinate.y - 30;
+        this.#updateAnimation(level, delta);
+        level.app.stage.addChild(this.#currentSprite);
     }
 
     #updateX(level: Level, delta: number) {
-        //Gauche
-        if(level.keys.leftPressed && !level.keys.rightPressed) {
+        if(level.keys.leftPressed && !level.keys.rightPressed) // left
+            this.#vx = -this.#speed;
+        else if(!level.keys.leftPressed && level.keys.rightPressed) // right
+            this.#vx = this.#speed;
+        else // neutral
+            this.#vx = 0;
+
+        if(this.#vx != 0) {
             var nextHitBox = new HitBox(this);
             var i = 0, x0 = this._coordinate.x;
-            while(i < this.#speed*delta) {
+            while(i < Math.abs(this.#vx)*delta) {
                 i++;
-                nextHitBox.coordinate = new Coordinate({x: x0 - i, y: nextHitBox.coordinate.y});
+                nextHitBox.coordinate = new Coordinate({x: x0 + Math.sign(this.#vx)*i, y: nextHitBox.coordinate.y});
                 if(!nextHitBox.areOverlaid(level.obstacles)) {
                     this._coordinate.x = nextHitBox.coordinate.x;
                 }
                 else {
-                    i = this.#speed*delta;
-                }
-            }
-        }
-        //Droite
-        else if(!level.keys.leftPressed && level.keys.rightPressed) {
-            var nextHitBox = new HitBox(this);
-            var i = 0, x0 = this._coordinate.x;
-            while(i < this.#speed*delta) {
-                i++;
-                nextHitBox.coordinate = new Coordinate({x: x0 + i, y: nextHitBox.coordinate.y});
-                if(!nextHitBox.areOverlaid(level.obstacles)) {
-                    this._coordinate.x = nextHitBox.coordinate.x;
-                }
-                else {
-                    i = this.#speed*delta;
+                    i = Math.abs(this.#vx)*delta;
                 }
             }
         }
@@ -157,5 +165,18 @@ export class Player extends HitBox {
             }
         }
         this.#upClicked = !level.keys.upPressed;
+    }
+
+    #updateAnimation(level: Level, delta: number) {
+        this.#spriteTime -= delta;
+        if(this.#spriteTime < 0) {
+            this.#spriteTime = 25;
+            this.#spriteNumber = (this.#spriteNumber + 1) % this.#idle.length;
+            this.#currentSprite.currentFrame = this.#spriteNumber;
+        }
+
+        if(this.#vx == 0 && this.#vy == 0) {
+
+        }
     }
 }
