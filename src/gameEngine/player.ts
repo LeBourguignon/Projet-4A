@@ -3,12 +3,14 @@ import { Coord, Coordinate } from "./coordinate";
 import { HitBox } from "./hitBox";
 import { Level } from "./level";
 
-export const playerWidth = 75;
-export const playerHeight = 150;
+export const playerWidth = 16;
+export const playerHeight = 30;
 
 export const playerSpeed = 5;
-export const playerJumpBoost = 20;
+export const playerJumpBoost = 10;
 export const playerWeight = 1;
+
+export const playerSpriteTime = 25;
 
 export class Player extends HitBox {
     #speed: number = playerSpeed;
@@ -22,9 +24,12 @@ export class Player extends HitBox {
 
     #graphics: Graphics;
     #currentSprite: AnimatedSprite;
-    #idle: Texture[];
-    #spriteTime: number = 25;
-    #spriteNumber: number = 0;
+    
+    #textures: Texture[];
+
+    #spriteTime: number = playerSpriteTime;
+    #spriteFrame: number = 0;
+    #facingRight: boolean = true;
 
     constructor(coordinate: Coord) {
         super({coordinate: coordinate, width: playerWidth, height: playerHeight});
@@ -34,18 +39,38 @@ export class Player extends HitBox {
         this.#graphics.drawRect(0, 0, this._width, this._height);
         this.#graphics.endFill();
 
-        this.#idle = [Texture.from('assets/player/idle/adventurer-idle-00.png'), Texture.from('assets/player/idle/adventurer-idle-01.png'), Texture.from('assets/player/idle/adventurer-idle-02.png'), Texture.from('assets/player/idle/adventurer-idle-03.png')];
+        this.#textures = [Texture.from('assets/player/idle/adventurer-idle-00.png'),    // 0
+                    Texture.from('assets/player/idle/adventurer-idle-01.png'),          // 1
+                    Texture.from('assets/player/idle/adventurer-idle-02.png'),          // 2
+                    Texture.from('assets/player/idle/adventurer-idle-03.png'),          // 3
+
+                    Texture.from('assets/player/run/adventurer-run-00.png'),            // 4
+                    Texture.from('assets/player/run/adventurer-run-01.png'),            // 5
+                    Texture.from('assets/player/run/adventurer-run-02.png'),            // 6
+                    Texture.from('assets/player/run/adventurer-run-03.png'),            // 7
+                    Texture.from('assets/player/run/adventurer-run-04.png'),            // 8
+                    Texture.from('assets/player/run/adventurer-run-05.png'),            // 9
+                
+                    Texture.from('assets/player/jump/adventurer-jump-00.png'),          // 10
+                    Texture.from('assets/player/jump/adventurer-jump-01.png'),          // 11
+                    Texture.from('assets/player/jump/adventurer-jump-02.png'),          // 12
+                    Texture.from('assets/player/jump/adventurer-jump-03.png'),          // 13
+
+                    Texture.from('assets/player/fall/adventurer-fall-00.png'),          // 14
+                    Texture.from('assets/player/fall/adventurer-fall-01.png'),          // 15
+                ];
         
-        this.#currentSprite = new AnimatedSprite(this.#idle);
-        this.#currentSprite.scale.set(5, 5);
+
+        this.#currentSprite = new AnimatedSprite(this.#textures);
     }
 
     addToStage(level: Level) {
         this.#graphics.x = this._coordinate.x + level.camCoordinate.x;
         this.#graphics.y = this._coordinate.y + level.camCoordinate.y;
         //level.app.stage.addChild(this.#graphics);
-        this.#currentSprite.x = this._coordinate.x + level.camCoordinate.x;
-        this.#currentSprite.y = this._coordinate.y + level.camCoordinate.y;
+        this.#currentSprite.anchor.x = 0.5;
+        this.#currentSprite.x = this._coordinate.x + level.camCoordinate.x + 8;
+        this.#currentSprite.y = this._coordinate.y + level.camCoordinate.y - 6;
         level.app.stage.addChild(this.#currentSprite);
     }
 
@@ -54,10 +79,9 @@ export class Player extends HitBox {
         this.#updateY(level, delta);
         this.#graphics.x = this._coordinate.x + level.camCoordinate.x;
         this.#graphics.y = this._coordinate.y + level.camCoordinate.y;
-        this.#currentSprite.x = this._coordinate.x + level.camCoordinate.x - 85;
-        this.#currentSprite.y = this._coordinate.y + level.camCoordinate.y - 30;
+        this.#currentSprite.x = this._coordinate.x + level.camCoordinate.x + 8;
+        this.#currentSprite.y = this._coordinate.y + level.camCoordinate.y - 6;
         this.#updateAnimation(level, delta);
-        level.app.stage.addChild(this.#currentSprite);
     }
 
     #updateX(level: Level, delta: number) {
@@ -85,10 +109,12 @@ export class Player extends HitBox {
     }
 
     #updateY(level: Level, delta: number) {
+        /*
         if (level.keys.downPressed)
             this.#weight = playerWeight*2;
         else
             this.#weight = playerWeight;
+        */
             
         var nextHitBox = new HitBox(this);
         nextHitBox.coordinate = new Coordinate({x: nextHitBox.coordinate.x, y: nextHitBox.coordinate.y + 1});
@@ -168,15 +194,81 @@ export class Player extends HitBox {
     }
 
     #updateAnimation(level: Level, delta: number) {
-        this.#spriteTime -= delta;
-        if(this.#spriteTime < 0) {
-            this.#spriteTime = 25;
-            this.#spriteNumber = (this.#spriteNumber + 1) % this.#idle.length;
-            this.#currentSprite.currentFrame = this.#spriteNumber;
+        if(this.#vy < -(this.#jumpBoost*0.9)) { // jump
+            this.#spriteTime = 0;
+            this.#spriteFrame = 10;
+            this.#currentSprite.currentFrame = this.#spriteFrame;
+        }
+        else if(this.#vy < -(this.#jumpBoost*0.8)) {
+            this.#spriteTime = 0;
+            this.#spriteFrame = 11;
+            this.#currentSprite.currentFrame = this.#spriteFrame;
+        }
+        else if(this.#vy < -(this.#jumpBoost*0.2)) {
+            this.#spriteTime = 0;
+            this.#spriteFrame = 12;
+            this.#currentSprite.currentFrame = this.#spriteFrame;
+        }
+        else if(this.#vy < 0) {
+            this.#spriteTime = 0;
+            this.#spriteFrame = 13;
+            this.#currentSprite.currentFrame = this.#spriteFrame;
+        }
+        else if(this.#vy > 0) { // fall
+            if(!(this.#spriteFrame >= 14 && this.#spriteFrame < 16)) {
+                this.#spriteTime = playerSpriteTime;
+                this.#spriteFrame = 14;
+                this.#currentSprite.currentFrame = this.#spriteFrame;
+            }
+            else {
+                this.#spriteTime -= delta;
+                
+                if(this.#spriteTime < 0) {
+                    this.#spriteTime = playerSpriteTime;
+                    this.#spriteFrame = (this.#spriteFrame - 14 + 1) % 2 + 14;
+                    this.#currentSprite.currentFrame = this.#spriteFrame;
+                }
+            }
+        }
+        else if(this.#vx != 0) {    // Run
+            if(!(this.#spriteFrame >= 4 && this.#spriteFrame < 10)) {
+                this.#spriteTime = playerSpriteTime / this.#speed;
+                this.#spriteFrame = 4;
+                this.#currentSprite.currentFrame = this.#spriteFrame;
+            }
+            else {
+                this.#spriteTime -= delta;
+            
+                if(this.#spriteTime < 0) {
+                    this.#spriteTime = playerSpriteTime / this.#speed;
+                    this.#spriteFrame = (this.#spriteFrame - 4 + 1) % 6 + 4;
+                    this.#currentSprite.currentFrame = this.#spriteFrame;
+                }
+            }
+        }
+        else if(this.#spriteFrame > 3) {    // neutral
+            this.#spriteTime = playerSpriteTime;
+            this.#spriteFrame = 0;
+            this.#currentSprite.currentFrame = this.#spriteFrame;
+        }
+        else {
+            this.#spriteTime -= delta;
+            
+            if(this.#spriteTime < 0) {
+                this.#spriteTime = playerSpriteTime;
+                this.#spriteFrame = (this.#spriteFrame + 1) % 4;
+                this.#currentSprite.currentFrame = this.#spriteFrame;
+            }
         }
 
-        if(this.#vx == 0 && this.#vy == 0) {
-
+        // Orientation
+        if(this.#vx > 0 && !this.#facingRight) {
+            this.#facingRight = true;
+            this.#currentSprite.scale.x *= -1;
+        }
+        if(this.#vx < 0 && this.#facingRight) {
+            this.#facingRight = false;
+            this.#currentSprite.scale.x *= -1;
         }
     }
 }
