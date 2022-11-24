@@ -96,11 +96,11 @@ export class Player extends HitBox {
     }
 
     #updateX(level: Level, delta: number) {
-        if(level.keys.leftPressed && !level.keys.rightPressed) // left
+        if(level.keys.leftPressed && !level.keys.rightPressed)  // left
             this.#vx = -this.#speed;
         else if(!level.keys.leftPressed && level.keys.rightPressed) // right
             this.#vx = this.#speed;
-        else // neutral
+        else    // neutral
             this.#vx = 0;
 
         if(this.#vx != 0) {
@@ -119,17 +119,10 @@ export class Player extends HitBox {
         }
     }
 
-    #updateY(level: Level, delta: number) {
-        /*
-        if (level.keys.downPressed)
-            this.#weight = playerWeight*2;
-        else
-            this.#weight = playerWeight;
-        */
-            
+    #updateY(level: Level, delta: number) {            
         var nextHitBox = new HitBox(this);
         nextHitBox.coordinate = new Coordinate({x: nextHitBox.coordinate.x, y: nextHitBox.coordinate.y + 1});
-        if(nextHitBox.areOverlaid(level.obstacles)) {
+        if(nextHitBox.areOverlaid(level.obstacles)) {   // On the floor
             if (this.#vy > 0) {
                 this.#secondJump = true;
                 this.#vy = 0;
@@ -137,6 +130,11 @@ export class Player extends HitBox {
                 
             if (level.keys.upPressed && this.#vy === 0) {
                 this.#vy = -this.#jumpBoost;
+                nextHitBox = new HitBox(this);
+                var i = 0, y0 = this._coordinate.y;
+            }
+
+            if (this.#vy < 0) {
                 nextHitBox = new HitBox(this);
                 var i = 0, y0 = this._coordinate.y;
                 while(i > this.#vy*delta) {
@@ -152,8 +150,8 @@ export class Player extends HitBox {
                 this.#vy += this.#weight*delta;
             }
         }
-        else {
-            if (this.#secondJump && this.#upClicked && level.keys.upPressed) {
+        else {  // In the void
+            if (this.#secondJump && this.#upClicked && level.keys.upPressed) {  // Double jump
                 this.#vy = -this.#jumpBoost;
                 nextHitBox = new HitBox(this);
                 var i = 0, y0 = this._coordinate.y;
@@ -170,7 +168,7 @@ export class Player extends HitBox {
                 this.#secondJump = false;
                 this.#vy += this.#weight*delta;
             }
-            else if(this.#vy < 0) {
+            else if(this.#vy < 0) { // Jumping
                 nextHitBox = new HitBox(this);
                 var i = 0, y0 = this._coordinate.y;
                 while(i > this.#vy*delta) {
@@ -185,7 +183,7 @@ export class Player extends HitBox {
                 }
                 this.#vy += this.#weight*delta;
             }
-            else {
+            else {  // Falling
                 nextHitBox = new HitBox(this);
                 var i = 0, y0 = this._coordinate.y;
                 while(i < this.#vy*delta) {
@@ -205,7 +203,7 @@ export class Player extends HitBox {
     }
 
     #updateAnimation(level: Level, delta: number) {
-        if(this.#vy < -(this.#jumpBoost*0.9)) { // jump
+        if(this.#vy < -(this.#jumpBoost*0.9)) { // Jump
             this.#spriteTime = 0;
             this.#spriteFrame = 10;
             this.#currentSprite.currentFrame = this.#spriteFrame;
@@ -225,7 +223,7 @@ export class Player extends HitBox {
             this.#spriteFrame = 13;
             this.#currentSprite.currentFrame = this.#spriteFrame;
         }
-        else if(this.#vy > 0) { // fall
+        else if(this.#vy > 0) { // Fall
             if(!(this.#spriteFrame >= 14 && this.#spriteFrame < 16)) {
                 this.#spriteTime = playerSpriteTime;
                 this.#spriteFrame = 14;
@@ -257,7 +255,7 @@ export class Player extends HitBox {
                 }
             }
         }
-        else if(this.#spriteFrame > 3) {    // neutral
+        else if(this.#spriteFrame > 3) {    // Neutral
             this.#spriteTime = playerSpriteTime;
             this.#spriteFrame = 0;
             this.#currentSprite.currentFrame = this.#spriteFrame;
