@@ -5,7 +5,7 @@ const windowSize = { width: 16*32, height: 9*32};
 //const windowSize = { width: 1920, height: 1080};
 
 //Initialisation Pixi
-let app = new Application({ width: windowSize.width, height: windowSize.height, resolution: 1, backgroundAlpha: 0 });
+let app = new Application({ width: windowSize.width, height: windowSize.height, resolution: 2, backgroundAlpha: 0 });
 document.body.appendChild(app.view as any);
 
 //Initialisation gameEngine

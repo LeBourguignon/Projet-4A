@@ -19,8 +19,7 @@ export class devLevel extends Level {
         super(app, {drawables: [floor, block1, block2, block3, player], player: player, obstacles: [floor, block1, block2, block3, wallLeft, wallRight], camCoordinate: new Coordinate({x: 0, y: 0})});
     }
 
-    update(delta: number) {
-        this._elapsed += delta;
+    updateCam(delta: number) {
         if(this._player._coordinate.x < 0 && this._camCoordinate.x != 16*32) {
             this._camCoordinate.x += 32;
         }
@@ -33,9 +32,5 @@ export class devLevel extends Level {
         else if(this._player._coordinate.x >= 16*32 && this._camCoordinate.x != -16*32) {
             this._camCoordinate.x -= 32;
         }
-
-        this._drawables.forEach(drawable => {
-            drawable.update(this, delta);
-        });
     }
 }

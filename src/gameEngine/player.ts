@@ -22,6 +22,8 @@ export class Player extends HitBox {
     #secondJump: boolean = false;
     #upClicked: boolean = false;
 
+    #showHitBox: boolean;
+
     #graphics: Graphics;
     #currentSprite: AnimatedSprite;
     
@@ -31,13 +33,16 @@ export class Player extends HitBox {
     #spriteFrame: number = 0;
     #facingRight: boolean = true;
 
-    constructor(coordinate: Coord) {
+    constructor(coordinate: Coord, showHitBox: boolean = false) {
         super({coordinate: coordinate, width: playerWidth, height: playerHeight});
 
-        this.#graphics = new Graphics();
-        this.#graphics.beginFill(0x0000FF);
-        this.#graphics.drawRect(0, 0, this._width, this._height);
-        this.#graphics.endFill();
+        this.#showHitBox = showHitBox;
+        if(this.#showHitBox) {
+            this.#graphics = new Graphics();
+            this.#graphics.beginFill(0x0000FF);
+            this.#graphics.drawRect(0, 0, this._width, this._height);
+            this.#graphics.endFill();
+        }
 
         this.#textures = [Texture.from('assets/player/idle/adventurer-idle-00.png'),    // 0
                     Texture.from('assets/player/idle/adventurer-idle-01.png'),          // 1
@@ -60,14 +65,15 @@ export class Player extends HitBox {
                     Texture.from('assets/player/fall/adventurer-fall-01.png'),          // 15
                 ];
         
-
         this.#currentSprite = new AnimatedSprite(this.#textures);
     }
 
     addToStage(level: Level) {
-        this.#graphics.x = this._coordinate.x + level.camCoordinate.x;
-        this.#graphics.y = this._coordinate.y + level.camCoordinate.y;
-        //level.app.stage.addChild(this.#graphics);
+        if(this.#showHitBox) {
+            this.#graphics.x = this._coordinate.x + level.camCoordinate.x;
+            this.#graphics.y = this._coordinate.y + level.camCoordinate.y;
+            level.app.stage.addChild(this.#graphics);
+        }
         this.#currentSprite.anchor.x = 0.5;
         this.#currentSprite.x = this._coordinate.x + level.camCoordinate.x + 8;
         this.#currentSprite.y = this._coordinate.y + level.camCoordinate.y - 6;
@@ -77,10 +83,15 @@ export class Player extends HitBox {
     update(level: Level, delta: number) {
         this.#updateX(level, delta);
         this.#updateY(level, delta);
-        this.#graphics.x = this._coordinate.x + level.camCoordinate.x;
-        this.#graphics.y = this._coordinate.y + level.camCoordinate.y;
+        
+        if(this.#showHitBox) {
+            this.#graphics.x = this._coordinate.x + level.camCoordinate.x;
+            this.#graphics.y = this._coordinate.y + level.camCoordinate.y;
+        }
+        
         this.#currentSprite.x = this._coordinate.x + level.camCoordinate.x + 8;
         this.#currentSprite.y = this._coordinate.y + level.camCoordinate.y - 6;
+        
         this.#updateAnimation(level, delta);
     }
 

@@ -51,8 +51,13 @@ export class Level {
 
     update(delta: number) {
         this._elapsed += delta;
+        this.updateCam(delta);
         this._drawables.forEach(drawable => {
             drawable.update(this, delta);
         });
+    }
+
+    updateCam(delta: number) {
+
     }
 }
