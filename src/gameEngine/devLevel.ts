@@ -19,7 +19,7 @@ export class devLevel extends Level {
         super(app, {drawables: [floor, block1, block2, block3, player], player: player, obstacles: [floor, block1, block2, block3, wallLeft, wallRight], camCoordinate: new Coordinate({x: 0, y: 0})});
     }
 
-    updateCam(delta: number) {
+    _updateCam(delta: number) {
         if(this._player._coordinate.x < 0 && this._camCoordinate.x != 16*32) {
             this._camCoordinate.x += 32;
         }

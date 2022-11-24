@@ -1,4 +1,4 @@
-import { AnimatedSprite, Graphics, ObservablePoint, Sprite, Texture } from "pixi.js";
+import { AnimatedSprite, Graphics, Texture } from "pixi.js";
 import { Coord, Coordinate } from "./coordinate";
 import { HitBox } from "./hitBox";
 import { Level } from "./level";
@@ -25,7 +25,7 @@ export class Player extends HitBox {
     #showHitBox: boolean;
 
     #graphics: Graphics;
-    #currentSprite: AnimatedSprite;
+    #animatedSprite: AnimatedSprite;
     
     #textures: Texture[];
 
@@ -65,7 +65,7 @@ export class Player extends HitBox {
                     Texture.from('assets/player/fall/adventurer-fall-01.png'),          // 15
                 ];
         
-        this.#currentSprite = new AnimatedSprite(this.#textures);
+        this.#animatedSprite = new AnimatedSprite(this.#textures);
     }
 
     addToStage(level: Level) {
@@ -74,10 +74,10 @@ export class Player extends HitBox {
             this.#graphics.y = this._coordinate.y + level.camCoordinate.y;
             level.app.stage.addChild(this.#graphics);
         }
-        this.#currentSprite.anchor.x = 0.5;
-        this.#currentSprite.x = this._coordinate.x + level.camCoordinate.x + 8;
-        this.#currentSprite.y = this._coordinate.y + level.camCoordinate.y - 6;
-        level.app.stage.addChild(this.#currentSprite);
+        this.#animatedSprite.anchor.x = 0.5;
+        this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x + 8;
+        this.#animatedSprite.y = this._coordinate.y + level.camCoordinate.y - 6;
+        level.app.stage.addChild(this.#animatedSprite);
     }
 
     update(level: Level, delta: number) {
@@ -89,8 +89,8 @@ export class Player extends HitBox {
             this.#graphics.y = this._coordinate.y + level.camCoordinate.y;
         }
         
-        this.#currentSprite.x = this._coordinate.x + level.camCoordinate.x + 8;
-        this.#currentSprite.y = this._coordinate.y + level.camCoordinate.y - 6;
+        this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x + 8;
+        this.#animatedSprite.y = this._coordinate.y + level.camCoordinate.y - 6;
         
         this.#updateAnimation(level, delta);
     }
@@ -206,28 +206,28 @@ export class Player extends HitBox {
         if(this.#vy < -(this.#jumpBoost*0.9)) { // Jump
             this.#spriteTime = 0;
             this.#spriteFrame = 10;
-            this.#currentSprite.currentFrame = this.#spriteFrame;
+            this.#animatedSprite.currentFrame = this.#spriteFrame;
         }
         else if(this.#vy < -(this.#jumpBoost*0.8)) {
             this.#spriteTime = 0;
             this.#spriteFrame = 11;
-            this.#currentSprite.currentFrame = this.#spriteFrame;
+            this.#animatedSprite.currentFrame = this.#spriteFrame;
         }
         else if(this.#vy < -(this.#jumpBoost*0.2)) {
             this.#spriteTime = 0;
             this.#spriteFrame = 12;
-            this.#currentSprite.currentFrame = this.#spriteFrame;
+            this.#animatedSprite.currentFrame = this.#spriteFrame;
         }
         else if(this.#vy < 0) {
             this.#spriteTime = 0;
             this.#spriteFrame = 13;
-            this.#currentSprite.currentFrame = this.#spriteFrame;
+            this.#animatedSprite.currentFrame = this.#spriteFrame;
         }
         else if(this.#vy > 0) { // Fall
             if(!(this.#spriteFrame >= 14 && this.#spriteFrame < 16)) {
                 this.#spriteTime = playerSpriteTime;
                 this.#spriteFrame = 14;
-                this.#currentSprite.currentFrame = this.#spriteFrame;
+                this.#animatedSprite.currentFrame = this.#spriteFrame;
             }
             else {
                 this.#spriteTime -= delta;
@@ -235,7 +235,7 @@ export class Player extends HitBox {
                 if(this.#spriteTime < 0) {
                     this.#spriteTime = playerSpriteTime;
                     this.#spriteFrame = (this.#spriteFrame - 14 + 1) % 2 + 14;
-                    this.#currentSprite.currentFrame = this.#spriteFrame;
+                    this.#animatedSprite.currentFrame = this.#spriteFrame;
                 }
             }
         }
@@ -243,7 +243,7 @@ export class Player extends HitBox {
             if(!(this.#spriteFrame >= 4 && this.#spriteFrame < 10)) {
                 this.#spriteTime = playerSpriteTime / this.#speed;
                 this.#spriteFrame = 4;
-                this.#currentSprite.currentFrame = this.#spriteFrame;
+                this.#animatedSprite.currentFrame = this.#spriteFrame;
             }
             else {
                 this.#spriteTime -= delta;
@@ -251,14 +251,14 @@ export class Player extends HitBox {
                 if(this.#spriteTime < 0) {
                     this.#spriteTime = playerSpriteTime / this.#speed;
                     this.#spriteFrame = (this.#spriteFrame - 4 + 1) % 6 + 4;
-                    this.#currentSprite.currentFrame = this.#spriteFrame;
+                    this.#animatedSprite.currentFrame = this.#spriteFrame;
                 }
             }
         }
         else if(this.#spriteFrame > 3) {    // Neutral
             this.#spriteTime = playerSpriteTime;
             this.#spriteFrame = 0;
-            this.#currentSprite.currentFrame = this.#spriteFrame;
+            this.#animatedSprite.currentFrame = this.#spriteFrame;
         }
         else {
             this.#spriteTime -= delta;
@@ -266,18 +266,18 @@ export class Player extends HitBox {
             if(this.#spriteTime < 0) {
                 this.#spriteTime = playerSpriteTime;
                 this.#spriteFrame = (this.#spriteFrame + 1) % 4;
-                this.#currentSprite.currentFrame = this.#spriteFrame;
+                this.#animatedSprite.currentFrame = this.#spriteFrame;
             }
         }
 
         // Orientation
         if(this.#vx > 0 && !this.#facingRight) {
             this.#facingRight = true;
-            this.#currentSprite.scale.x *= -1;
+            this.#animatedSprite.scale.x *= -1;
         }
         if(this.#vx < 0 && this.#facingRight) {
             this.#facingRight = false;
-            this.#currentSprite.scale.x *= -1;
+            this.#animatedSprite.scale.x *= -1;
         }
     }
 }
