@@ -6,9 +6,9 @@ import { Level } from "./level";
 export const playerWidth = 16;
 export const playerHeight = 30;
 
-export const playerSpeed = 5;
-export const playerJumpBoost = 10;
-export const playerWeight = 1;
+export const playerSpeed = 4;
+export const playerJumpBoost = 9;
+export const playerWeight = 0.7;
 
 export const playerSpriteTime = 25;
 
@@ -152,7 +152,7 @@ export class Player extends HitBox {
         }
         else {  // In the void
             if (this.#secondJump && this.#upClicked && level.keys.upPressed) {  // Double jump
-                this.#vy = -this.#jumpBoost;
+                this.#vy = -this.#jumpBoost/2;
                 nextHitBox = new HitBox(this);
                 var i = 0, y0 = this._coordinate.y;
                 while(i > this.#vy*delta) {
