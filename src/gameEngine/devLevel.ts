@@ -5,11 +5,11 @@ import { Player } from "./player";
 import { StaticColorBlock } from "./staticColorBlock";
 import { Tenemigs, tenemigsHeight, tenemigsWidth } from "./tenemigs";
 
-export class devLevel extends Level {
+export class DevLevel extends Level {
     constructor(app: Application<ICanvas>) {
         //Initialisation des hitbox
-        var player = new Player({x: 8*32, y: 0}, true);
-        var tenemigs = new Tenemigs({x: 24*32 - (tenemigsWidth/2), y: 8*32 - tenemigsHeight}, true)
+        var player = new Player({x: 8*32, y: 0});
+        var tenemigs = new Tenemigs({x: 24*32 - (tenemigsWidth/2), y: 8*32 - tenemigsHeight})
 
         var floor = new StaticColorBlock({coordinate: {x: -16*32, y: 8*32}, width: 3*16*32, height: 32}, 0x262626);
         var block1 = new StaticColorBlock({coordinate: {x: -8*32, y: 6*32}, width: 14*32, height: 8}, 0x262626);

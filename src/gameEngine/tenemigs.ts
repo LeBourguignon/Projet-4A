@@ -1,4 +1,4 @@
-import { AnimatedSprite, Graphics, Rectangle, Sprite, Texture } from "pixi.js";
+import { AnimatedSprite, Graphics, SCALE_MODES, Sprite, Texture } from "pixi.js";
 import { Coord } from "./coordinate";
 import { HitBox } from "./hitBox";
 import { Level } from "./level";
@@ -40,6 +40,10 @@ export class Tenemigs extends HitBox {
                         Texture.from('assets/tenemigs/idle/tenemigs-idle-05.png')       // 5
                     ];
 
+        this.#textures.forEach(texture => {
+            texture.baseTexture.scaleMode = SCALE_MODES.NEAREST;
+        });
+
         this.#animatedSprite = new AnimatedSprite(this.#textures);
     }
 
@@ -53,6 +57,12 @@ export class Tenemigs extends HitBox {
         this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x + this._width/2;
         this.#animatedSprite.y = this._coordinate.y + level.camCoordinate.y;
         level.app.stage.addChild(this.#animatedSprite);
+    }
+
+    setMask(mask: Sprite) {
+        if(this.#showHitBox)
+            this.#graphics.mask = mask;
+        this.#animatedSprite.mask = mask;
     }
     
     update(level: Level, delta: number) {

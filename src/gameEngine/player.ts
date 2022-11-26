@@ -1,4 +1,4 @@
-import { AnimatedSprite, Graphics, Texture } from "pixi.js";
+import { AnimatedSprite, Graphics, SCALE_MODES, Sprite, Texture } from "pixi.js";
 import { Coord, Coordinate } from "./coordinate";
 import { HitBox } from "./hitBox";
 import { Level } from "./level";
@@ -64,6 +64,10 @@ export class Player extends HitBox {
                     Texture.from('assets/player/fall/adventurer-fall-00.png'),          // 14
                     Texture.from('assets/player/fall/adventurer-fall-01.png'),          // 15
                 ];
+
+        this.#textures.forEach(texture => {
+            texture.baseTexture.scaleMode = SCALE_MODES.NEAREST;
+        });
         
         this.#animatedSprite = new AnimatedSprite(this.#textures);
     }
@@ -78,6 +82,12 @@ export class Player extends HitBox {
         this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x + 8;
         this.#animatedSprite.y = this._coordinate.y + level.camCoordinate.y - 6;
         level.app.stage.addChild(this.#animatedSprite);
+    }
+
+    setMask(mask: Sprite) {
+        if(this.#showHitBox)
+            this.#graphics.mask = mask;
+        this.#animatedSprite.mask = mask;
     }
 
     update(level: Level, delta: number) {

@@ -1,3 +1,4 @@
+import { Sprite } from "pixi.js";
 import { Coord, Coordinate } from "./coordinate";
 import { Level } from "./level";
 
@@ -25,6 +26,10 @@ export class HitBox {
 
     addToStage(level: Level) {
         throw "Redefine the addToStage method!"
+    }
+
+    setMask(mask: Sprite) {
+        throw "Redefine the setMask method!"
     }
 
     update(level: Level, delta: number) {
