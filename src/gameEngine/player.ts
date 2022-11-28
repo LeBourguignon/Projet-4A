@@ -12,6 +12,8 @@ export const playerWeight = 0.7;
 
 export const playerSpriteTime = 25;
 
+export const playerLightingRadius = 3*32;
+
 export class Player extends HitBox {
     #speed: number = playerSpeed;
     #jumpBoost: number = playerJumpBoost;
@@ -24,7 +26,7 @@ export class Player extends HitBox {
 
     #showHitBox: boolean;
 
-    #graphics: Graphics;
+    #hitBox: Graphics;
     #animatedSprite: AnimatedSprite;
     
     #textures: Texture[];
@@ -38,10 +40,10 @@ export class Player extends HitBox {
 
         this.#showHitBox = showHitBox;
         if(this.#showHitBox) {
-            this.#graphics = new Graphics();
-            this.#graphics.beginFill(0x0000FF);
-            this.#graphics.drawRect(0, 0, this._width, this._height);
-            this.#graphics.endFill();
+            this.#hitBox = new Graphics();
+            this.#hitBox.beginFill(0x0000FF)
+                        .drawRect(0, 0, this._width, this._height)
+                        .endFill();
         }
 
         this.#textures = [Texture.from('assets/player/idle/adventurer-idle-00.png'),    // 0
@@ -74,9 +76,9 @@ export class Player extends HitBox {
 
     addToStage(level: Level) {
         if(this.#showHitBox) {
-            this.#graphics.x = this._coordinate.x + level.camCoordinate.x;
-            this.#graphics.y = this._coordinate.y + level.camCoordinate.y;
-            level.app.stage.addChild(this.#graphics);
+            this.#hitBox.x = this._coordinate.x + level.camCoordinate.x;
+            this.#hitBox.y = this._coordinate.y + level.camCoordinate.y;
+            level.app.stage.addChild(this.#hitBox);
         }
         this.#animatedSprite.anchor.x = 0.5;
         this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x + 8;
@@ -84,9 +86,15 @@ export class Player extends HitBox {
         level.app.stage.addChild(this.#animatedSprite);
     }
 
+    addLighting(level: Level) {
+        level.lighting.beginFill(0xFF0000)
+                      .drawCircle(this._coordinate.x + this._width/2 + level.camCoordinate.x + level.size.coordinate.x, this._coordinate.y + this._height/2 + level.camCoordinate.y + level.size.coordinate.y, playerLightingRadius)
+                      .endFill();
+    }
+
     setMask(mask: Sprite) {
         if(this.#showHitBox)
-            this.#graphics.mask = mask;
+            this.#hitBox.mask = mask;
         this.#animatedSprite.mask = mask;
     }
 
@@ -95,8 +103,8 @@ export class Player extends HitBox {
         this.#updateY(level, delta);
         
         if(this.#showHitBox) {
-            this.#graphics.x = this._coordinate.x + level.camCoordinate.x;
-            this.#graphics.y = this._coordinate.y + level.camCoordinate.y;
+            this.#hitBox.x = this._coordinate.x + level.camCoordinate.x;
+            this.#hitBox.y = this._coordinate.y + level.camCoordinate.y;
         }
         
         this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x + 8;

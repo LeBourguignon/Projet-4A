@@ -12,7 +12,7 @@ export class Tenemigs extends HitBox {
 
     #showHitBox: boolean;
 
-    #graphics: Graphics;
+    #hitBox: Graphics;
     #animatedSprite: AnimatedSprite;
     
     #textures: Texture[] = [];
@@ -26,10 +26,10 @@ export class Tenemigs extends HitBox {
 
         this.#showHitBox = showHitBox;
         if(this.#showHitBox) {
-            this.#graphics = new Graphics();
-            this.#graphics.beginFill(0x0000FF);
-            this.#graphics.drawRect(0, 0, this._width, this._height);
-            this.#graphics.endFill();
+            this.#hitBox = new Graphics();
+            this.#hitBox.beginFill(0x0000FF)
+                        .drawRect(0, 0, this._width, this._height)
+                        .endFill();
         }
 
         this.#textures = [Texture.from('assets/tenemigs/idle/tenemigs-idle-00.png'),    // 0
@@ -49,9 +49,9 @@ export class Tenemigs extends HitBox {
 
     addToStage(level: Level) {
         if(this.#showHitBox) {
-            this.#graphics.x = this._coordinate.x + level.camCoordinate.x;
-            this.#graphics.y = this._coordinate.y + level.camCoordinate.y;
-            level.app.stage.addChild(this.#graphics);
+            this.#hitBox.x = this._coordinate.x + level.camCoordinate.x;
+            this.#hitBox.y = this._coordinate.y + level.camCoordinate.y;
+            level.app.stage.addChild(this.#hitBox);
         }
         this.#animatedSprite.anchor.x = 0.5;
         this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x + this._width/2;
@@ -59,16 +59,20 @@ export class Tenemigs extends HitBox {
         level.app.stage.addChild(this.#animatedSprite);
     }
 
+    addLighting(level: Level) {
+
+    }
+
     setMask(mask: Sprite) {
         if(this.#showHitBox)
-            this.#graphics.mask = mask;
+            this.#hitBox.mask = mask;
         this.#animatedSprite.mask = mask;
     }
     
     update(level: Level, delta: number) {
         if(this.#showHitBox) {
-            this.#graphics.x = this._coordinate.x + level.camCoordinate.x;
-            this.#graphics.y = this._coordinate.y + level.camCoordinate.y;
+            this.#hitBox.x = this._coordinate.x + level.camCoordinate.x;
+            this.#hitBox.y = this._coordinate.y + level.camCoordinate.y;
         }
         
         this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x + this._width/2;
