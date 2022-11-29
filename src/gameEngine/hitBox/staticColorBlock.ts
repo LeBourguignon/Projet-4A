@@ -1,6 +1,6 @@
 import { Graphics, Sprite } from "pixi.js";
-import { HitBox, Rect } from "./hitBox";
-import { Level } from "./level";
+import { HitBox, Rect } from "../hitBox";
+import { Level } from "../level";
 
 export class StaticColorBlock extends HitBox {
     #color: number;
@@ -24,7 +24,7 @@ export class StaticColorBlock extends HitBox {
         level.app.stage.addChild(this.#graphics);
     }
 
-    addLighting(level: Level) {
+    addLighting(level: Level, lighting: Graphics) {
         
     }
 

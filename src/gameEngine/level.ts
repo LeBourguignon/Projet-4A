@@ -1,7 +1,7 @@
 import { Application, filters, Graphics, ICanvas, Rectangle, SCALE_MODES, Sprite } from "pixi.js";
 import { Coordinate } from "./coordinate";
 import { HitBox, Rect} from "./hitBox";
-import { Player } from "./player";
+import { Player } from "./hitBox/player";
 
 export const BlurSize = 32*2;
 
@@ -32,8 +32,6 @@ export class Level {
     _elapsed = 0.0;
 
     _inTheDarkness: boolean;
-    _lighting: Graphics;
-    _focus: Sprite;
 
     constructor(app: Application<ICanvas>, map: Map) {
         this._app = app;
@@ -81,16 +79,17 @@ export class Level {
     set camCoordinate(value: Coordinate) { this._camCoordinate = value; }
     get camCoordinate(): Coordinate { return this._camCoordinate; }
 
-    get lighting(): Graphics { return this._lighting; }
-
     update(delta: number) {
         this._elapsed += delta;
         this._updateCam(delta);
         this._drawables.forEach(drawable => {
             drawable.update(this, delta);
         });
+        /*
         if(this._inTheDarkness)
             this._updateLights();
+        */
+        
     }
 
     _updateCam(delta: number) {
@@ -98,19 +97,20 @@ export class Level {
     }
 
     _updateLights() {
-        this._lighting = new Graphics();
+        var lighting = new Graphics();
         this._drawables.forEach(drawable => {
-            drawable.addLighting(this);
+            drawable.addLighting(this, lighting);
         });
-        this._lighting.filters = [new filters.BlurFilter(BlurSize)];
+        lighting.filters = [new filters.BlurFilter(BlurSize)];
 
-        const bounds = new Rectangle(this._size.coordinate.x, this._size.coordinate.y, this._size.width, this._size.height);
-        const texture = this._app.renderer.generateTexture(this._lighting, {region: bounds}) as any;
+        var bounds = new Rectangle(this._size.coordinate.x, this._size.coordinate.y, this._size.width, this._size.height);
+        var texture = this._app.renderer.generateTexture(lighting, {region: bounds}) as any;
 
-        this._focus = new Sprite(texture);
+        var focus = new Sprite(texture);
 
         this._drawables.forEach(drawable => {
-            drawable.setMask(this._focus);
+            drawable.setMask(focus);
         });
+
     }
 }

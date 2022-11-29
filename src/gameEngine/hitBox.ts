@@ -28,7 +28,7 @@ export class HitBox {
         throw "Redefine the addToStage method!"
     }
 
-    addLighting(level: Level) {
+    addLighting(level: Level, lighting: Graphics) {
         throw "Redefine the addLighting method!"
     }
 

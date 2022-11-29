@@ -1,9 +1,9 @@
 import { Application, ICanvas } from "pixi.js";
-import { Coordinate } from "./coordinate";
-import { Level } from "./level";
-import { Player } from "./player";
-import { StaticColorBlock } from "./staticColorBlock";
-import { Tenemigs, tenemigsHeight, tenemigsWidth } from "./tenemigs";
+import { Coordinate } from "../coordinate";
+import { Level } from "../level";
+import { Player } from "../hitBox/player";
+import { StaticColorBlock } from "../hitBox/staticColorBlock";
+import { Tenemigs, tenemigsHeight, tenemigsWidth } from "../hitBox/tenemigs";
 
 export class DevLevel extends Level {
     constructor(app: Application<ICanvas>) {

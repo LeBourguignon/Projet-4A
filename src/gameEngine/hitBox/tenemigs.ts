@@ -1,12 +1,14 @@
 import { AnimatedSprite, Graphics, SCALE_MODES, Sprite, Texture } from "pixi.js";
-import { Coord } from "./coordinate";
-import { HitBox } from "./hitBox";
-import { Level } from "./level";
+import { Coord } from "../coordinate";
+import { HitBox } from "../hitBox";
+import { Level } from "../level";
 
 export const tenemigsWidth = 10;
 export const tenemigsHeight = 15;
 
 export const tenemigsSpriteTime = 25;
+
+export const tenemigsLightingRadius = 3*32;
 
 export class Tenemigs extends HitBox {
 
@@ -59,8 +61,12 @@ export class Tenemigs extends HitBox {
         level.app.stage.addChild(this.#animatedSprite);
     }
 
-    addLighting(level: Level) {
-
+    addLighting(level: Level, lighting: Graphics) {
+        /*
+        level.lighting.beginFill(0xFF0000)
+                      .drawCircle(this._coordinate.x + this._width/2 + level.camCoordinate.x + level.size.coordinate.x, this._coordinate.y + this._height/2 + level.camCoordinate.y + level.size.coordinate.y, tenemigsLightingRadius)
+                      .endFill();
+        */
     }
 
     setMask(mask: Sprite) {

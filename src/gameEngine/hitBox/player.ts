@@ -1,7 +1,7 @@
 import { AnimatedSprite, Graphics, SCALE_MODES, Sprite, Texture } from "pixi.js";
-import { Coord, Coordinate } from "./coordinate";
-import { HitBox } from "./hitBox";
-import { Level } from "./level";
+import { Coord, Coordinate } from "../coordinate";
+import { HitBox } from "../hitBox";
+import { Level } from "../level";
 
 export const playerWidth = 16;
 export const playerHeight = 30;
@@ -86,10 +86,10 @@ export class Player extends HitBox {
         level.app.stage.addChild(this.#animatedSprite);
     }
 
-    addLighting(level: Level) {
-        level.lighting.beginFill(0xFF0000)
-                      .drawCircle(this._coordinate.x + this._width/2 + level.camCoordinate.x + level.size.coordinate.x, this._coordinate.y + this._height/2 + level.camCoordinate.y + level.size.coordinate.y, playerLightingRadius)
-                      .endFill();
+    addLighting(level: Level, lighting: Graphics) {
+        lighting.beginFill(0xFF0000)
+                .drawCircle(this._coordinate.x + this._width/2 + level.camCoordinate.x + level.size.coordinate.x, this._coordinate.y + this._height/2 + level.camCoordinate.y + level.size.coordinate.y, playerLightingRadius)
+                .endFill();
     }
 
     setMask(mask: Sprite) {
