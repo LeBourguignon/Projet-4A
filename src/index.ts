@@ -10,8 +10,8 @@ let app = new Application({ width: windowSize.width, height: windowSize.height, 
 document.body.appendChild(app.view as any);
 
 //Initialisation gameEngine
-var level = new DevLevel(app);
-//var level = new DevLevelInTheDarkness(app);
+//var level = new DevLevel(app);
+var level = new DevLevelInTheDarkness(app);
 
 //Initialisation controlleur
 document.addEventListener("keydown", keyDownHandler, false);

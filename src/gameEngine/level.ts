@@ -1,4 +1,4 @@
-import { Application, filters, Graphics, ICanvas, Rectangle, SCALE_MODES, Sprite } from "pixi.js";
+import { Application, filters, Graphics, ICanvas, Rectangle, SCALE_MODES, Sprite, Texture } from "pixi.js";
 import { Coordinate } from "./coordinate";
 import { HitBox, Rect} from "./hitBox";
 import { Player } from "./hitBox/player";
@@ -32,6 +32,8 @@ export class Level {
     _elapsed = 0.0;
 
     _inTheDarkness: boolean;
+    _lighting: Graphics | null = null;
+    _focus: Sprite | null = null;
 
     constructor(app: Application<ICanvas>, map: Map) {
         this._app = app;
@@ -85,11 +87,11 @@ export class Level {
         this._drawables.forEach(drawable => {
             drawable.update(this, delta);
         });
-        /*
+        
         if(this._inTheDarkness)
             this._updateLights();
-        */
         
+    
     }
 
     _updateCam(delta: number) {
@@ -97,20 +99,23 @@ export class Level {
     }
 
     _updateLights() {
-        var lighting = new Graphics();
+        this._lighting?.destroy({children: true});
+        this._lighting = new Graphics();
         this._drawables.forEach(drawable => {
-            drawable.addLighting(this, lighting);
+            drawable.addLighting(this, this._lighting);
         });
-        lighting.filters = [new filters.BlurFilter(BlurSize)];
+        this._lighting.filters = [new filters.BlurFilter(BlurSize)];
 
-        var bounds = new Rectangle(this._size.coordinate.x, this._size.coordinate.y, this._size.width, this._size.height);
-        var texture = this._app.renderer.generateTexture(lighting, {region: bounds}) as any;
-
-        var focus = new Sprite(texture);
-
+        const bounds = new Rectangle(this._size.coordinate.x, this._size.coordinate.y, this._size.width, this._size.height);
+   
+        this._focus?.destroy({children: true, texture: true, baseTexture: true});
+        const texture = this._app.renderer.generateTexture(this._lighting, {region: bounds}) as any;
+        
+        this._focus = new Sprite(texture);
+        
         this._drawables.forEach(drawable => {
-            drawable.setMask(focus);
+            drawable.setMask(this._focus);
         });
-
+        
     }
 }
