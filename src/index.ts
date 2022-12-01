@@ -30,6 +30,9 @@ function keyDownHandler(e: KeyboardEvent) {
     if(e.key === "ArrowRight" || e.key === 'd') {
         level.keys.rightPressed = true;
     }
+    if(e.key === "Control" || e.key === "e") {
+        level.keys.interactionPressed = true;
+    }
 }
 
 function keyUpHandler(e: KeyboardEvent) {
@@ -44,6 +47,9 @@ function keyUpHandler(e: KeyboardEvent) {
     }
     if(e.key === "ArrowRight" || e.key === 'd') {
         level.keys.rightPressed = false;
+    }
+    if(e.key === "Control" || e.key === "e") {
+        level.keys.interactionPressed = false;
     }
 }
 

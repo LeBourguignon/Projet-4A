@@ -6,10 +6,11 @@ import { Player } from "./hitBox/player";
 export const BlurSize = 32*2;
 
 export type Keys = { 
-    upPressed: Boolean, 
-    downPressed: Boolean, 
+    upPressed: boolean, 
+    downPressed: boolean, 
     rightPressed: boolean, 
-    leftPressed: Boolean }
+    leftPressed: boolean,
+    interactionPressed: boolean}
 
 export type Map = { 
     size: Rect, 
@@ -37,7 +38,7 @@ export class Level {
 
     constructor(app: Application<ICanvas>, map: Map) {
         this._app = app;
-        this._keys = { upPressed: false, downPressed: false, rightPressed: false, leftPressed: false};
+        this._keys = { upPressed: false, downPressed: false, rightPressed: false, leftPressed: false, interactionPressed: false};
 
         this._size = map.size;
         this._drawables = map.drawables;
