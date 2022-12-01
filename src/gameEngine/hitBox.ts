@@ -1,14 +1,15 @@
+import { Graphics, Sprite } from "pixi.js";
 import { Coord, Coordinate } from "./coordinate";
 import { Level } from "./level";
 
-export type Rectangle = { coordinate: Coord, width: number, height: number }
+export type Rect = { coordinate: Coord, width: number, height: number }
 
 export class HitBox {
     _coordinate: Coordinate;
     _width: number;
     _height: number;
 
-    constructor(hitBox: Rectangle) {
+    constructor(hitBox: Rect) {
         this._coordinate = new Coordinate(hitBox.coordinate);
         this._width = hitBox.width;
         this._height = hitBox.height;
@@ -25,6 +26,14 @@ export class HitBox {
 
     addToStage(level: Level) {
         throw "Redefine the addToStage method!"
+    }
+
+    addLighting(level: Level, lighting: Graphics) {
+        throw "Redefine the addLighting method!"
+    }
+
+    setMask(mask: Sprite) {
+        throw "Redefine the setMask method!"
     }
 
     update(level: Level, delta: number) {

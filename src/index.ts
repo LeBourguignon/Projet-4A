@@ -1,15 +1,17 @@
 import { Application } from 'pixi.js';
-import { devLevel } from './gameEngine/devLevel';
+import { DevLevel } from './gameEngine/levels/devLevel';
+import { DevLevelInTheDarkness } from './gameEngine/levels/devLevelInTheDarkness';
 
 const windowSize = { width: 16*32, height: 9*32};
 //const windowSize = { width: 1920, height: 1080};
 
 //Initialisation Pixi
-let app = new Application({ width: windowSize.width, height: windowSize.height, resolution: 2, backgroundAlpha: 0 });
+let app = new Application({ width: windowSize.width, height: windowSize.height, resolution: 2});
 document.body.appendChild(app.view as any);
 
 //Initialisation gameEngine
-var level = new devLevel(app);
+//var level = new DevLevel(app);
+var level = new DevLevelInTheDarkness(app);
 
 //Initialisation controlleur
 document.addEventListener("keydown", keyDownHandler, false);
@@ -28,6 +30,9 @@ function keyDownHandler(e: KeyboardEvent) {
     if(e.key === "ArrowRight" || e.key === 'd') {
         level.keys.rightPressed = true;
     }
+    if(e.key === "Control" || e.key === "e") {
+        level.keys.interactionPressed = true;
+    }
 }
 
 function keyUpHandler(e: KeyboardEvent) {
@@ -42,6 +47,9 @@ function keyUpHandler(e: KeyboardEvent) {
     }
     if(e.key === "ArrowRight" || e.key === 'd') {
         level.keys.rightPressed = false;
+    }
+    if(e.key === "Control" || e.key === "e") {
+        level.keys.interactionPressed = false;
     }
 }
 

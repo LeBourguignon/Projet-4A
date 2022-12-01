@@ -1,12 +1,12 @@
-import { Graphics } from "pixi.js";
-import { HitBox, Rectangle } from "./hitBox";
-import { Level } from "./level";
+import { Graphics, Sprite } from "pixi.js";
+import { HitBox, Rect } from "../hitBox";
+import { Level } from "../level";
 
 export class StaticColorBlock extends HitBox {
     #color: number;
     #graphics: Graphics
 
-    constructor(hitBox: Rectangle, color: number) {
+    constructor(hitBox: Rect, color: number) {
         super(hitBox);
         this.#color = color;
 
@@ -22,6 +22,14 @@ export class StaticColorBlock extends HitBox {
         this.#graphics.x = this._coordinate.x + level.camCoordinate.x;
         this.#graphics.y = this._coordinate.y + level.camCoordinate.y;
         level.app.stage.addChild(this.#graphics);
+    }
+
+    addLighting(level: Level, lighting: Graphics) {
+        
+    }
+
+    setMask(mask: Sprite) {
+        this.#graphics.mask = mask;
     }
 
     update(level: Level, delta: number) {
