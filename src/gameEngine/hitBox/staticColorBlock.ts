@@ -1,6 +1,6 @@
 import { Graphics, Sprite } from "pixi.js";
-import { HitBox, Rect } from "../hitBox";
-import { Level } from "../level";
+import { HitBox, Rect } from "../patterns/hitBox";
+import { Level } from "../patterns/level";
 
 export class StaticColorBlock extends HitBox {
     #color: number;
@@ -21,7 +21,7 @@ export class StaticColorBlock extends HitBox {
     addToStage(level: Level) {
         this.#graphics.x = this._coordinate.x + level.camCoordinate.x;
         this.#graphics.y = this._coordinate.y + level.camCoordinate.y;
-        level.app.stage.addChild(this.#graphics);
+        level.game.app.stage.addChild(this.#graphics);
     }
 
     addLighting(level: Level, lighting: Graphics) {

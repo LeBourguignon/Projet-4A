@@ -1,7 +1,7 @@
 import { AnimatedSprite, Graphics, SCALE_MODES, Sprite, Texture } from "pixi.js";
-import { Coord, Coordinate } from "../coordinate";
-import { HitBox } from "../hitBox";
-import { Level } from "../level";
+import { Coord, Coordinate } from "../patterns/coordinate";
+import { HitBox } from "../patterns/hitBox";
+import { Level } from "../patterns/level";
 
 export const playerWidth = 16;
 export const playerHeight = 30;
@@ -78,12 +78,12 @@ export class Player extends HitBox {
         if(this.#showHitBox) {
             this.#hitBox.x = this._coordinate.x + level.camCoordinate.x;
             this.#hitBox.y = this._coordinate.y + level.camCoordinate.y;
-            level.app.stage.addChild(this.#hitBox);
+            level.game.app.stage.addChild(this.#hitBox);
         }
         this.#animatedSprite.anchor.x = 0.5;
         this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x + 8;
         this.#animatedSprite.y = this._coordinate.y + level.camCoordinate.y - 6;
-        level.app.stage.addChild(this.#animatedSprite);
+        level.game.app.stage.addChild(this.#animatedSprite);
     }
 
     addLighting(level: Level, lighting: Graphics) {
@@ -114,9 +114,9 @@ export class Player extends HitBox {
     }
 
     #updateX(level: Level, delta: number) {
-        if(level.keys.leftPressed && !level.keys.rightPressed)  // left
+        if(level.game.keys.leftPressed && !level.game.keys.rightPressed)  // left
             this.#vx = -this.#speed;
-        else if(!level.keys.leftPressed && level.keys.rightPressed) // right
+        else if(!level.game.keys.leftPressed && level.game.keys.rightPressed) // right
             this.#vx = this.#speed;
         else    // neutral
             this.#vx = 0;
@@ -146,7 +146,7 @@ export class Player extends HitBox {
                 this.#vy = 0;
             }
                 
-            if (level.keys.upPressed && this.#vy === 0) {
+            if (level.game.keys.upPressed && this.#vy === 0) {
                 this.#vy = -this.#jumpBoost;
                 nextHitBox = new HitBox(this);
                 var i = 0, y0 = this._coordinate.y;
@@ -169,7 +169,7 @@ export class Player extends HitBox {
             }
         }
         else {  // In the void
-            if (this.#secondJump && this.#upClicked && level.keys.upPressed) {  // Double jump
+            if (this.#secondJump && this.#upClicked && level.game.keys.upPressed) {  // Double jump
                 this.#vy = -this.#jumpBoost/2;
                 nextHitBox = new HitBox(this);
                 var i = 0, y0 = this._coordinate.y;
@@ -217,7 +217,7 @@ export class Player extends HitBox {
                 this.#vy += this.#weight*delta;
             }
         }
-        this.#upClicked = !level.keys.upPressed;
+        this.#upClicked = !level.game.keys.upPressed;
     }
 
     #updateAnimation(level: Level, delta: number) {

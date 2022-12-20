@@ -1,7 +1,7 @@
 import { AnimatedSprite, Graphics, SCALE_MODES, Sprite, Texture } from "pixi.js";
-import { Coord } from "../coordinate";
-import { HitBox } from "../hitBox";
-import { Level } from "../level";
+import { Coord } from "../patterns/coordinate";
+import { HitBox } from "../patterns/hitBox";
+import { Level } from "../patterns/level";
 
 export const torchWidth = 24;
 export const torchHeight = 30;
@@ -55,11 +55,11 @@ export class Torch extends HitBox {
         if(this.#showHitBox) {
             this.#hitBox.x = this._coordinate.x + level.camCoordinate.x;
             this.#hitBox.y = this._coordinate.y + level.camCoordinate.y;
-            level.app.stage.addChild(this.#hitBox);
+            level.game.app.stage.addChild(this.#hitBox);
         }
         this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x;
         this.#animatedSprite.y = this._coordinate.y + level.camCoordinate.y;
-        level.app.stage.addChild(this.#animatedSprite);
+        level.game.app.stage.addChild(this.#animatedSprite);
     }
 
     addLighting(level: Level, lighting: Graphics) {
@@ -77,9 +77,9 @@ export class Torch extends HitBox {
     }
 
     update(level: Level, delta: number) {
-        if(this.isOverlaid(level.player) && level.keys.interactionPressed && this.#interactionClicked)
+        if(this.isOverlaid(level.player) && level.game.keys.interactionPressed && this.#interactionClicked)
             this.#state = !this.#state;
-        this.#interactionClicked = !level.keys.interactionPressed;
+        this.#interactionClicked = !level.game.keys.interactionPressed;
 
         if(this.#showHitBox) {
             this.#hitBox.x = this._coordinate.x + level.camCoordinate.x;
