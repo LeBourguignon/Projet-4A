@@ -14,16 +14,18 @@ export class DevGame extends Game {
         this._currentLevel.update(delta);
 
         if(this._currentLevel.id == 1 && this._currentLevel.player.coordinate.x > 32*32) {
+            this._currentLevel.removeToStage();
             this._currentLevel = this._levels[1];
-            this._clearStage();
             this._currentLevel.addToStage(this);
         }
 
+        /*
         if(this._currentLevel.id == 2 && this._currentLevel.player.coordinate.x < -16*32) {
+            this._currentLevel.removeToStage();
             this._currentLevel = this._levels[0];
-            this._clearStage();
             this._currentLevel.addToStage(this);
         }
+        */
 
         //console.log(this._currentLevel.id);
         //console.log(this._currentLevel.player.coordinate.x);

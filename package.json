@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/LeBourguignon/Projet-4A#readme",
   "dependencies": {
+    "@pixi/sound": "^5.0.0",
     "pixi.js": "^7.0.4"
   },
   "devDependencies": {

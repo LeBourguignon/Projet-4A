@@ -83,10 +83,4 @@ export class Game {
     _update(delta: number) {
         throw "Redefine the update method!"
     }
-
-    _clearStage() {
-        while(this._app.stage.children[0]) {
-            this._app.stage.removeChild(this._app.stage.children[0])
-        }
-    }
 }

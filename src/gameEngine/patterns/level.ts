@@ -3,21 +3,24 @@ import { Coordinate } from "./coordinate";
 import { HitBox, Rect} from "./hitBox";
 import { Player } from "../hitBox/player";
 import { Game } from "./game";
+import { Sound } from "@pixi/sound";
 
 export const BlurSize = 32*2;
 
 export type Map = { 
-    size: Rect, 
+    size?: Rect, 
     drawables: HitBox[], 
     obstacles: HitBox[], 
     player: Player, 
     camCoordinate: Coordinate, 
-    inTheDarkness: boolean }
+    inTheDarkness?: boolean,
+    theme?: string
+}
 
 export class Level {
     _id: number;
 
-    _game: Game = null;
+    _game: Game | null = null;
 
     _size: Rect;
     _drawables: HitBox[];
@@ -27,28 +30,36 @@ export class Level {
     _camCoordinate: Coordinate;
     _elapsed = 0.0;
 
-    _inTheDarkness: boolean;
+    _inTheDarkness: boolean = false;
     _lighting: Graphics | null = null;
     _focus: Sprite | null = null;
+
+    _theme: Sound | null = null;
 
     constructor(map: Map, id: number = 0) {
         this._id = id;
 
-        this._size = map.size;
         this._drawables = map.drawables;
         this._player = map.player;
         this._obstacles = map.obstacles;
         this._camCoordinate = map.camCoordinate;
-        this._inTheDarkness = map.inTheDarkness;
 
-        var top = new HitBox({coordinate: {x: this._size.coordinate.x, y: this._size.coordinate.y - 32}, width: this._size.width, height: 32});
-        this._obstacles.push(top);
-        var bot = new HitBox({coordinate: {x: this._size.coordinate.x, y: this._size.coordinate.y + this._size.height}, width: this._size.width, height: 32});
-        this._obstacles.push(bot);
-        var left = new HitBox({coordinate: {x: this._size.coordinate.x - 32, y: this._size.coordinate.y}, width: 32, height: this._size.height});
-        this._obstacles.push(left);
-        var right = new HitBox({coordinate: {x: this._size.coordinate.x + this._size.width, y: this._size.coordinate.y}, width: 32, height: this._size.height});
-        this._obstacles.push(right);
+        if(map.size) {
+            this._size = map.size;
+            this._obstacles.push(new HitBox({coordinate: {x: this._size.coordinate.x, y: this._size.coordinate.y - 32}, width: this._size.width, height: 32}));
+            this._obstacles.push(new HitBox({coordinate: {x: this._size.coordinate.x, y: this._size.coordinate.y + this._size.height}, width: this._size.width, height: 32}));
+            this._obstacles.push(new HitBox({coordinate: {x: this._size.coordinate.x - 32, y: this._size.coordinate.y}, width: 32, height: this._size.height}));
+            this._obstacles.push(new HitBox({coordinate: {x: this._size.coordinate.x + this._size.width, y: this._size.coordinate.y}, width: 32, height: this._size.height}));
+        }
+
+        if(map.inTheDarkness)
+            this._inTheDarkness = map.inTheDarkness;
+
+        if(map.theme) this._theme = Sound.from({
+            url: map.theme,
+            loop: true
+        })
+
     }
 
     get id(): number { return this._id; }
@@ -73,12 +84,11 @@ export class Level {
             drawable.addToStage(this);
         });
 
-        if(this._inTheDarkness) {
-            this._updateLights();
-         }
+        if(this._inTheDarkness) this._updateLights();
+        if(this._theme) this._theme.play();
     }
 
-    update(delta: number) {
+    update(delta: number = 0) {
         if(this._game !== null) {
             this._elapsed += delta;
             this._updateCam(delta);
@@ -91,11 +101,18 @@ export class Level {
         }
     }
 
-    _updateCam(delta: number) {
+    removeToStage() {
+        while(this._game.app.stage.children[0])
+            this._game.app.stage.removeChild(this._game.app.stage.children[0])
+        if(this._theme) this._theme.stop();
+        this._game = null;
+    }
+
+    _updateCam(delta: number = 0) {
         throw "Redefine the updateCam method!"
     }
 
-    _updateLights() {
+    _updateLights(delta: number = 0) {
         this._lighting?.destroy({children: true});
         this._lighting = new Graphics();
         this._drawables.forEach(drawable => {
