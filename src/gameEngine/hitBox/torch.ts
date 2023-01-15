@@ -1,4 +1,5 @@
 import { AnimatedSprite, Graphics, SCALE_MODES, Sprite, Texture } from "pixi.js";
+import { assets } from "../..";
 import { Coord } from "../patterns/coordinate";
 import { HitBox } from "../patterns/hitBox";
 import { Level } from "../patterns/level";
@@ -35,10 +36,11 @@ export class Torch extends HitBox {
                         .endFill();
         }
 
-        this.#textures = [Texture.from('assets/torch/torch-off.png'),    // 0
-                        Texture.from('assets/torch/torch-on-00.png'),      // 1
-                        Texture.from('assets/torch/torch-on-01.png'),      // 2
-                        Texture.from('assets/torch/torch-on-02.png'),      // 3
+        this.#textures = [
+                        assets.torch.torchOff,  // 0
+                        assets.torch.torchOn00, // 1
+                        assets.torch.torchOn01, // 2
+                        assets.torch.torchOn02 // 3
                     ];
 
         this.#textures.forEach(texture => {

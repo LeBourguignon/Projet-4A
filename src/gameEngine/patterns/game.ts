@@ -1,7 +1,11 @@
 import { Application, ICanvas } from "pixi.js";
 import { Level } from "./level";
 
-export const windowSize = { width: 16*32, height: 9*32};
+export type WindowSize = { 
+    width: number, 
+    height: number, 
+    resolution: number
+};
 
 export type Keys = { 
     upPressed: boolean, 
@@ -20,9 +24,9 @@ export class Game {
 
     _elapsed = 0.0;
 
-    constructor(element: HTMLElement, levels: Level[]) {
+    constructor(element: HTMLElement, windowSize: WindowSize, levels: Level[]) {
         //Initialisation Pixi
-        this._app = new Application({ width: windowSize.width, height: windowSize.height, resolution: 2});
+        this._app = new Application({ width: windowSize.width, height: windowSize.height, resolution: windowSize.resolution});
         element.appendChild(this._app.view as any);
 
         //Initialisation des niveaux

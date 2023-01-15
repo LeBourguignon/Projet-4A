@@ -1,4 +1,5 @@
 import { AnimatedSprite, Graphics, SCALE_MODES, Sprite, Texture } from "pixi.js";
+import { assets } from "../..";
 import { Coord } from "../patterns/coordinate";
 import { HitBox } from "../patterns/hitBox";
 import { Level } from "../patterns/level";
@@ -34,12 +35,13 @@ export class Tenemigs extends HitBox {
                         .endFill();
         }
 
-        this.#textures = [Texture.from('assets/tenemigs/idle/tenemigs-idle-00.png'),    // 0
-                        Texture.from('assets/tenemigs/idle/tenemigs-idle-01.png'),      // 1
-                        Texture.from('assets/tenemigs/idle/tenemigs-idle-02.png'),      // 2
-                        Texture.from('assets/tenemigs/idle/tenemigs-idle-03.png'),      // 3
-                        Texture.from('assets/tenemigs/idle/tenemigs-idle-04.png'),      // 4
-                        Texture.from('assets/tenemigs/idle/tenemigs-idle-05.png')       // 5
+        this.#textures = [
+                        assets.tenemigs.tenemigsIdle00, // 0
+                        assets.tenemigs.tenemigsIdle01, // 1
+                        assets.tenemigs.tenemigsIdle02, // 2
+                        assets.tenemigs.tenemigsIdle03, // 3
+                        assets.tenemigs.tenemigsIdle04, // 4
+                        assets.tenemigs.tenemigsIdle05  // 5
                     ];
 
         this.#textures.forEach(texture => {

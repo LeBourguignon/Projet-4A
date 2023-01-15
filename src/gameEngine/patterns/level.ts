@@ -14,7 +14,7 @@ export type Map = {
     player: Player, 
     camCoordinate: Coordinate, 
     inTheDarkness?: boolean,
-    theme?: string
+    theme?: Sound
 }
 
 export class Level {
@@ -52,14 +52,8 @@ export class Level {
             this._obstacles.push(new HitBox({coordinate: {x: this._size.coordinate.x + this._size.width, y: this._size.coordinate.y}, width: 32, height: this._size.height}));
         }
 
-        if(map.inTheDarkness)
-            this._inTheDarkness = map.inTheDarkness;
-
-        if(map.theme) this._theme = Sound.from({
-            url: map.theme,
-            loop: true
-        })
-
+        if(map.inTheDarkness) this._inTheDarkness = map.inTheDarkness;
+        if(map.theme) this._theme = map.theme;
     }
 
     get id(): number { return this._id; }
@@ -70,6 +64,7 @@ export class Level {
 
     get drawables(): HitBox[] { return this._drawables; }
 
+    set player(value: Player) { this._player = value; }
     get player(): Player { return this._player; }
     
     get obstacles(): HitBox[] { return this._obstacles; }
