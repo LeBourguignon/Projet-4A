@@ -1,5 +1,6 @@
 import { Graphics, Sprite } from "pixi.js";
-import { HitBox, Rect } from "../patterns/hitBox";
+import { Rect } from "../patterns/coordinate";
+import { HitBox } from "../patterns/hitBox";
 import { Level } from "../patterns/level";
 
 export class StaticColorBlock extends HitBox {

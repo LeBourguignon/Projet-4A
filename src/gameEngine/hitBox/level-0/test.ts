@@ -9,7 +9,7 @@ export class Test extends HitBox {
     constructor(coordinate: Coord) {
         super({coordinate: coordinate, width: 0, height: 0});
 
-        const texture = Texture.from('assets/level-0/test.png');
+        const texture = Texture.from('assets/noManifest/level-0/test.png');
         texture.baseTexture.scaleMode = SCALE_MODES.NEAREST;
 
         this.#sprite = new Sprite(texture);

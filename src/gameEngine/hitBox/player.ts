@@ -24,7 +24,6 @@ export class Player extends HitBox {
     #vx: number = 0;
     #vy: number = 0;
     #secondJump: boolean = false;
-    #upClicked: boolean = false;
 
     #showHitBox: boolean;
 
@@ -36,14 +35,6 @@ export class Player extends HitBox {
     #spriteTime: number = playerSpriteTime;
     #spriteFrame: number = 0;
     #facingRight: boolean = true;
-
-    // #step1: Sound = Sound.from({
-    //     url: 'assets/adventurer/sound/adventurer-sound-step-00.wav'
-    // });
-
-    // #step2: Sound = Sound.from({
-    //     url: 'assets/adventurer/sound/adventurer-sound-step-01.wav'
-    // })
 
     #step1: Sound | null = null;
     #step2: Sound | null = null;
@@ -123,22 +114,14 @@ export class Player extends HitBox {
     update(level: Level, delta: number) {
         this.#updateX(level, delta);
         this.#updateY(level, delta);
-        
-        if(this.#showHitBox) {
-            this.#hitBox.x = this._coordinate.x + level.camCoordinate.x;
-            this.#hitBox.y = this._coordinate.y + level.camCoordinate.y;
-        }
-        
-        this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x + 8*(this._width/playerWidth);
-        this.#animatedSprite.y = this._coordinate.y + level.camCoordinate.y - 6*(this._height/playerHeight);
-        
+        this.#updateCoordinates(level, delta);
         this.#updateAnimation(level, delta);
     }
 
     #updateX(level: Level, delta: number) {
-        if(level.game.keys.leftPressed && !level.game.keys.rightPressed)  // left
+        if(level.game.keys.left.pressed && !level.game.keys.right.pressed)  // left
             this.#vx = -this.#speed;
-        else if(!level.game.keys.leftPressed && level.game.keys.rightPressed) // right
+        else if(!level.game.keys.left.pressed && level.game.keys.right.pressed) // right
             this.#vx = this.#speed;
         else    // neutral
             this.#vx = 0;
@@ -168,7 +151,7 @@ export class Player extends HitBox {
                 this.#vy = 0;
             }
                 
-            if (level.game.keys.upPressed && this.#vy === 0) {
+            if (level.game.keys.up.pressed && this.#vy === 0) {
                 this.#vy = -this.#jumpBoost;
                 nextHitBox = new HitBox(this);
                 var i = 0, y0 = this._coordinate.y;
@@ -191,7 +174,7 @@ export class Player extends HitBox {
             }
         }
         else {  // In the void
-            if (this.#secondJump && this.#upClicked && level.game.keys.upPressed) {  // Double jump
+            if (this.#secondJump && level.game.keys.up.clicked && level.game.keys.up.pressed) {  // Double jump
                 this.#vy = -this.#jumpBoost/2;
                 nextHitBox = new HitBox(this);
                 var i = 0, y0 = this._coordinate.y;
@@ -239,7 +222,16 @@ export class Player extends HitBox {
                 this.#vy += this.#weight*delta;
             }
         }
-        this.#upClicked = !level.game.keys.upPressed;
+    }
+    
+    #updateCoordinates(level: Level, delta: number) {
+        if(this.#showHitBox) {
+            this.#hitBox.x = this._coordinate.x + level.camCoordinate.x;
+            this.#hitBox.y = this._coordinate.y + level.camCoordinate.y;
+        }
+        
+        this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x + 8*(this._width/playerWidth);
+        this.#animatedSprite.y = this._coordinate.y + level.camCoordinate.y - 6*(this._height/playerHeight);
     }
 
     #updateAnimation(level: Level, delta: number) {

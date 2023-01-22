@@ -2,14 +2,14 @@ import { Coordinate } from "../patterns/coordinate";
 import { Level } from "../patterns/level";
 import { Player, playerHeight, playerWidth } from "../hitBox/player";
 import { StaticColorBlock } from "../hitBox/staticColorBlock";
-import { Tenemigs, tenemigsHeight, tenemigsWidth } from "../hitBox/tenemigs";
 import { assets } from "../..";
+import { DevTenemigs, tenemigsHeight, tenemigsWidth } from "../hitBox/dev/devTenemigs";
 
 export class DevLevel extends Level {
     constructor(id: number = 0) {
         //Initialisation des hitbox
         const player = new Player({x: 8*32-playerWidth/2, y: 0}, 1);
-        const tenemigs = new Tenemigs({x: 24*32 - (tenemigsWidth/2), y: 8*32 - tenemigsHeight});
+        const tenemigs = new DevTenemigs({x: 24*32 - (tenemigsWidth/2), y: 8*32 - tenemigsHeight}, ["Jour 1", "Jour 2"]);
 
         const background = new StaticColorBlock({coordinate: {x: -16*32, y: 0}, width: 3*16*32, height: 9*32}, 0xD9D9D9);
 

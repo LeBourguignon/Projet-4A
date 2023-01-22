@@ -9,6 +9,11 @@ const buttonStartGameHTML = document.getElementById("startGame");
 buttonStartGameHTML.addEventListener('click', async () => {
     buttonStartGameHTML.remove();
 
+    const bodyHTML = document.querySelector('body');
+    const textHTML = document.createElement('p');
+    textHTML.textContent = "Chargement des ressources ...";
+    bodyHTML.append(textHTML);
+
     const manifest = await fetch('assets/manifest.json').then((res) => res.json());
 
     const manifestAudio = {
@@ -21,6 +26,8 @@ buttonStartGameHTML.addEventListener('click', async () => {
 
     assets.theme.theme01.loop = true;
     assets.theme.theme02.loop = true;
+
+    textHTML.remove();
 
     const game = new DevGame(document.body);
 

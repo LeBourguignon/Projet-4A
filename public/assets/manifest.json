@@ -170,6 +170,33 @@
                 {
                     "name" : "tenemigsIdle05",
                     "srcs" : "assets/tenemigs/idle/tenemigs-idle-05.png"
+                },
+
+
+
+                {
+                    "name" : "tenemigsRun00",
+                    "srcs" : "assets/tenemigs/run/tenemigs-run-00.png"
+                },
+                {
+                    "name" : "tenemigsRun01",
+                    "srcs" : "assets/tenemigs/run/tenemigs-run-01.png"
+                },
+                {
+                    "name" : "tenemigsRun02",
+                    "srcs" : "assets/tenemigs/run/tenemigs-run-02.png"
+                },
+                {
+                    "name" : "tenemigsRun03",
+                    "srcs" : "assets/tenemigs/run/tenemigs-run-03.png"
+                },
+                {
+                    "name" : "tenemigsRun04",
+                    "srcs" : "assets/tenemigs/run/tenemigs-run-04.png"
+                },
+                {
+                    "name" : "tenemigsRun05",
+                    "srcs" : "assets/tenemigs/run/tenemigs-run-05.png"
                 }
             ]
         },

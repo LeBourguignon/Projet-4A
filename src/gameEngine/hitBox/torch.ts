@@ -23,7 +23,6 @@ export class Torch extends HitBox {
     #spriteFrame: number = 0;
 
     #state: boolean = false;
-    #interactionClicked: boolean = false;
 
     constructor(coordinate: Coord, showHitBox: boolean = false) {
         super({coordinate: coordinate, width: torchWidth, height: torchHeight});
@@ -79,9 +78,8 @@ export class Torch extends HitBox {
     }
 
     update(level: Level, delta: number) {
-        if(this.isOverlaid(level.player) && level.game.keys.interactionPressed && this.#interactionClicked)
+        if(this.isOverlaid(level.player) && level.game.keys.interaction.pressed && level.game.keys.interaction.clicked)
             this.#state = !this.#state;
-        this.#interactionClicked = !level.game.keys.interactionPressed;
 
         if(this.#showHitBox) {
             this.#hitBox.x = this._coordinate.x + level.camCoordinate.x;

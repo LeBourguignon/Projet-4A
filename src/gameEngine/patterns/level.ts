@@ -1,6 +1,6 @@
 import { Application, filters, Graphics, ICanvas, Rectangle, SCALE_MODES, Sprite, Texture } from "pixi.js";
-import { Coordinate } from "./coordinate";
-import { HitBox, Rect} from "./hitBox";
+import { Coordinate, Rect } from "./coordinate";
+import { HitBox} from "./hitBox";
 import { Player } from "../hitBox/player";
 import { Game } from "./game";
 import { Sound } from "@pixi/sound";

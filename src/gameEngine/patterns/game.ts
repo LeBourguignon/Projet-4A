@@ -7,12 +7,17 @@ export type WindowSize = {
     resolution: number
 };
 
+export type Key = {
+    pressed: boolean,
+    clicked: boolean
+};
+
 export type Keys = { 
-    upPressed: boolean, 
-    downPressed: boolean, 
-    rightPressed: boolean, 
-    leftPressed: boolean,
-    interactionPressed: boolean
+    up: Key,  
+    right: Key, 
+    left: Key,
+    interaction: Key,
+    hit: Key
 };
 
 export class Game {
@@ -33,41 +38,41 @@ export class Game {
         this._levels = levels;
 
         //Initialisation des controlleurs
-        this._keys = { upPressed: false, downPressed: false, rightPressed: false, leftPressed: false, interactionPressed: false};
+        this._keys = { up: {pressed: false, clicked: false}, right: {pressed: false, clicked: false}, left: {pressed: false, clicked: false}, interaction: {pressed: false, clicked: false}, hit: {pressed: false, clicked: false}};
         document.addEventListener("keydown", (e: KeyboardEvent) => {
-            if(e.key === "ArrowUp" || e.key === 'z') {
-                this.keys.upPressed = true;
+            if(e.key === 'z') {
+                this.keys.up.pressed = true;
             }
-            if(e.key === "ArrowDown" || e.key === 's') {
-                this._keys.downPressed = true;
+            if(e.key === 'q') {
+                this._keys.left.pressed = true;
             }
-            if(e.key === "ArrowLeft" || e.key === 'q') {
-                this._keys.leftPressed = true;
+            if(e.key === 'd') {
+                this._keys.right.pressed = true;
             }
-            if(e.key === "ArrowRight" || e.key === 'd') {
-                this._keys.rightPressed = true;
+            if(e.key === 'e') {
+                this._keys.interaction.pressed = true;
             }
-            if(e.key === "Control" || e.key === "e") {
-                this._keys.interactionPressed = true;
+            if(e.key === ' ') {
+                this._keys.hit.pressed = true;
             }
         }, false);
         
 
         document.addEventListener("keyup", (e: KeyboardEvent) => {
-            if(e.key === "ArrowUp" || e.key === 'z') {
-                this._keys.upPressed = false;
+            if(e.key === 'z') {
+                this._keys.up.pressed = false;
             }
-            if(e.key === "ArrowDown" || e.key === 's') {
-                this._keys.downPressed = false;
+            if(e.key === 'q') {
+                this._keys.left.pressed = false;
             }
-            if(e.key === "ArrowLeft" || e.key === 'q') {
-                this._keys.leftPressed = false;
+            if(e.key === 'd') {
+                this._keys.right.pressed = false;
             }
-            if(e.key === "ArrowRight" || e.key === 'd') {
-                this._keys.rightPressed = false;
+            if(e.key === "e") {
+                this._keys.interaction.pressed = false;
             }
-            if(e.key === "Control" || e.key === "e") {
-                this._keys.interactionPressed = false;
+            if(e.key === ' ') {
+                this._keys.hit.pressed = false;
             }
         }, false);
 
@@ -76,6 +81,7 @@ export class Game {
             this._elapsed += delta;
             if(this._currentLevel !== null)
                 this._update(delta);
+            this._updateKeysClicked();
         });
     }
 
@@ -86,5 +92,13 @@ export class Game {
 
     _update(delta: number) {
         throw "Redefine the update method!"
+    }
+
+    _updateKeysClicked() {
+        this._keys.up.clicked = !this._keys.up.pressed;
+        this._keys.left.clicked = !this._keys.left.pressed;
+        this._keys.right.clicked = !this._keys.right.pressed;
+        this._keys.interaction.clicked = !this._keys.interaction.pressed;
+        this._keys.hit.clicked = !this._keys.hit.pressed;
     }
 }
