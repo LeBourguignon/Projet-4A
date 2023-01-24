@@ -27,7 +27,7 @@ export class HitBox {
     }
 
     addLighting(level: Level, lighting: Graphics) {
-        throw "Redefine the addLighting method!"
+        
     }
 
     setMask(mask: Sprite) {

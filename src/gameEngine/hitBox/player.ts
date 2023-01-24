@@ -119,9 +119,9 @@ export class Player extends HitBox {
     }
 
     #updateX(level: Level, delta: number) {
-        if(level.game.keys.left.pressed && !level.game.keys.right.pressed)  // left
+        if(level.game.keys.left.pressed && !level.game.keys.right.pressed && !level.ongoingDialog)  // left
             this.#vx = -this.#speed;
-        else if(!level.game.keys.left.pressed && level.game.keys.right.pressed) // right
+        else if(!level.game.keys.left.pressed && level.game.keys.right.pressed && !level.ongoingDialog) // right
             this.#vx = this.#speed;
         else    // neutral
             this.#vx = 0;
@@ -151,7 +151,7 @@ export class Player extends HitBox {
                 this.#vy = 0;
             }
                 
-            if (level.game.keys.up.pressed && this.#vy === 0) {
+            if (level.game.keys.up.pressed && this.#vy === 0 && !level.ongoingDialog) {
                 this.#vy = -this.#jumpBoost;
                 nextHitBox = new HitBox(this);
                 var i = 0, y0 = this._coordinate.y;
@@ -174,7 +174,7 @@ export class Player extends HitBox {
             }
         }
         else {  // In the void
-            if (this.#secondJump && level.game.keys.up.clicked && level.game.keys.up.pressed) {  // Double jump
+            if (this.#secondJump && level.game.keys.up.clicked && level.game.keys.up.pressed && !level.ongoingDialog) {  // Double jump
                 this.#vy = -this.#jumpBoost/2;
                 nextHitBox = new HitBox(this);
                 var i = 0, y0 = this._coordinate.y;

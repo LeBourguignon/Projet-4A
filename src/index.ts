@@ -22,7 +22,7 @@ buttonStartGameHTML.addEventListener('click', async () => {
     }
 
     Assets.init({manifest: manifest, });
-    assets = await Assets.loadBundle(['adventurer', 'tenemigs', 'theme', 'torch']);
+    assets = await Assets.loadBundle(['adventurer', 'keys', 'tenemigs', 'theme', 'torch']);
 
     assets.theme.theme01.loop = true;
     assets.theme.theme02.loop = true;

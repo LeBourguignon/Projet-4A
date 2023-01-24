@@ -25,10 +25,6 @@ export class StaticColorBlock extends HitBox {
         level.game.app.stage.addChild(this.#graphics);
     }
 
-    addLighting(level: Level, lighting: Graphics) {
-        
-    }
-
     setMask(mask: Sprite) {
         this.#graphics.mask = mask;
     }

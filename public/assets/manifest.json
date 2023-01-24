@@ -145,6 +145,46 @@
             ]
         },
         {
+            "name" : "keys",
+            "assets" : [
+                {
+                    "name" : "keyD00",
+                    "srcs" : "assets/keys/key-d-00.png"
+                },
+                {
+                    "name" : "keyD01",
+                    "srcs" : "assets/keys/key-d-01.png"
+                },
+
+                {
+                    "name" : "keyE00",
+                    "srcs" : "assets/keys/key-e-00.png"
+                },
+                {
+                    "name" : "keyE01",
+                    "srcs" : "assets/keys/key-e-01.png"
+                },
+
+                {
+                    "name" : "keyQ00",
+                    "srcs" : "assets/keys/key-q-00.png"
+                },
+                {
+                    "name" : "keyQ01",
+                    "srcs" : "assets/keys/key-q-01.png"
+                },
+
+                {
+                    "name" : "keyZ00",
+                    "srcs" : "assets/keys/key-z-00.png"
+                },
+                {
+                    "name" : "keyZ01",
+                    "srcs" : "assets/keys/key-z-01.png"
+                }
+            ]
+        },
+        {
             "name" : "tenemigs",
             "assets" : [
                 {

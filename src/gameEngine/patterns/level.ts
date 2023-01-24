@@ -27,6 +27,8 @@ export class Level {
     _obstacles: HitBox[];
     _player: Player;
 
+    _ongoingDialog: boolean;
+
     _camCoordinate: Coordinate;
     _elapsed = 0.0;
 
@@ -68,6 +70,9 @@ export class Level {
     get player(): Player { return this._player; }
     
     get obstacles(): HitBox[] { return this._obstacles; }
+
+    set ongoingDialog(value: boolean) { this._ongoingDialog = value; }
+    get ongoingDialog(): boolean { return this._ongoingDialog; }
 
     set camCoordinate(value: Coordinate) { this._camCoordinate = value; }
     get camCoordinate(): Coordinate { return this._camCoordinate; }

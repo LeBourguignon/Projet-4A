@@ -16,12 +16,14 @@ export class DevTenemigs extends HitBox {
 
     #hitBox: Graphics;
     #animatedSprite: AnimatedSprite;
-    
-    #textures: Texture[] = [];
+    #interactiveSprite: AnimatedSprite;
 
-    #spriteTime: number = tenemigsSpriteTime;
-    #spriteFrame: number = 0;
+    #animatedSpriteTime: number = tenemigsSpriteTime;
+    #animatedSpriteFrame: number = 0;
     #facingRight: boolean = true;
+
+    #interactiveSpriteTime: number = 20;
+    #interactiveSpriteFrame: number = 0;
 
     #dialogBox: DevTenemigsDialogBox | null = null;
 
@@ -39,27 +41,41 @@ export class DevTenemigs extends HitBox {
         if(texts.length)
             this.#dialogBox = new DevTenemigsDialogBox(texts);
 
-        this.#textures = [
-                        assets.tenemigs.tenemigsIdle00, // 0
-                        assets.tenemigs.tenemigsIdle01, // 1
-                        assets.tenemigs.tenemigsIdle02, // 2
-                        assets.tenemigs.tenemigsIdle03, // 3
-                        assets.tenemigs.tenemigsIdle04, // 4
-                        assets.tenemigs.tenemigsIdle05, // 5
+        const animatedTextures = [
+            assets.tenemigs.tenemigsIdle00, // 0
+            assets.tenemigs.tenemigsIdle01, // 1
+            assets.tenemigs.tenemigsIdle02, // 2
+            assets.tenemigs.tenemigsIdle03, // 3
+            assets.tenemigs.tenemigsIdle04, // 4
+            assets.tenemigs.tenemigsIdle05, // 5
 
-                        assets.tenemigs.tenemigsRun00,  // 6
-                        assets.tenemigs.tenemigsRun01,  // 7
-                        assets.tenemigs.tenemigsRun02,  // 8
-                        assets.tenemigs.tenemigsRun03,  // 9
-                        assets.tenemigs.tenemigsRun04,  // 10
-                        assets.tenemigs.tenemigsRun05   // 11
-                    ];
+            assets.tenemigs.tenemigsRun00,  // 6
+            assets.tenemigs.tenemigsRun01,  // 7
+            assets.tenemigs.tenemigsRun02,  // 8
+            assets.tenemigs.tenemigsRun03,  // 9
+            assets.tenemigs.tenemigsRun04,  // 10
+            assets.tenemigs.tenemigsRun05   // 11
+        ];
 
-        this.#textures.forEach(texture => {
+        animatedTextures.forEach(texture => {
             texture.baseTexture.scaleMode = SCALE_MODES.NEAREST;
         });
 
-        this.#animatedSprite = new AnimatedSprite(this.#textures);
+        this.#animatedSprite = new AnimatedSprite(animatedTextures);
+        this.#animatedSprite.anchor.x = 0.5;
+
+        const interactiveTextures = [
+            assets.keys.keyE00, // 0
+            assets.keys.keyE01  // 1
+        ];
+
+        interactiveTextures.forEach(texture => {
+            texture.baseTexture.scaleMode = SCALE_MODES.NEAREST;
+        });
+
+        this.#interactiveSprite = new AnimatedSprite(interactiveTextures);
+        this.#interactiveSprite.anchor.y = 1;
+        this.#interactiveSprite.visible = false;
     }
 
     addToStage(level: Level) {
@@ -68,14 +84,14 @@ export class DevTenemigs extends HitBox {
             this.#hitBox.y = this._coordinate.y + level.camCoordinate.y;
             level.game.app.stage.addChild(this.#hitBox);
         }
-        this.#animatedSprite.anchor.x = 0.5;
+
         this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x + this._width/2;
         this.#animatedSprite.y = this._coordinate.y + level.camCoordinate.y;
         level.game.app.stage.addChild(this.#animatedSprite);
-    }
 
-    addLighting(level: Level, lighting: Graphics) {
- 
+        this.#interactiveSprite.x = this._coordinate.x + level.camCoordinate.x + this._width/2 - 6.5;
+        this.#interactiveSprite.y = this._coordinate.y + level.camCoordinate.y - 20;
+        level.game.app.stage.addChild(this.#interactiveSprite);
     }
 
     setMask(mask: Sprite) {
@@ -101,18 +117,19 @@ export class DevTenemigs extends HitBox {
     }
 
     #updateAnimation(level: Level, delta: number) {
-        if(this.#spriteFrame > 5) {    // Neutral
-            this.#spriteTime = tenemigsSpriteTime;
-            this.#spriteFrame = 0;
-            this.#animatedSprite.currentFrame = this.#spriteFrame;
+        // Animated
+        if(this.#animatedSpriteFrame > 5) {    // Neutral
+            this.#animatedSpriteTime = tenemigsSpriteTime;
+            this.#animatedSpriteFrame = 0;
+            this.#animatedSprite.currentFrame = this.#animatedSpriteFrame;
         }
         else {
-            this.#spriteTime -= delta;
+            this.#animatedSpriteTime -= delta;
             
-            if(this.#spriteTime < 0) {
-                this.#spriteTime = tenemigsSpriteTime;
-                this.#spriteFrame = (this.#spriteFrame + 1) % 6;
-                this.#animatedSprite.currentFrame = this.#spriteFrame;
+            if(this.#animatedSpriteTime < 0) {
+                this.#animatedSpriteTime = tenemigsSpriteTime;
+                this.#animatedSpriteFrame = (this.#animatedSpriteFrame + 1) % 6;
+                this.#animatedSprite.currentFrame = this.#animatedSpriteFrame;
             }
         }
 
@@ -124,6 +141,23 @@ export class DevTenemigs extends HitBox {
         if(level.player.coordinate.x + level.player.width < this._coordinate.x && this.#facingRight) {
             this.#facingRight = false;
             this.#animatedSprite.scale.x *= -1;
+        }
+
+        // Interactive
+        if(this.isOverlaid(level.player) && !this.#dialogBox.isStarted) {
+            this.#interactiveSprite.visible = true;
+            this.#interactiveSpriteTime -= delta;
+
+            if(this.#interactiveSpriteTime < 0) {
+                this.#interactiveSpriteTime = 20;
+                this.#interactiveSpriteFrame = (this.#interactiveSpriteFrame + 1) % 2;
+                this.#interactiveSprite.currentFrame = this.#interactiveSpriteFrame;
+            }
+        }
+        else {
+            this.#interactiveSprite.visible = false;
+            this.#interactiveSpriteTime = 0;
+            this.#interactiveSpriteFrame = 1;
         }
     }
 
