@@ -1,4 +1,4 @@
-import { AnimatedSprite, SCALE_MODES, Sprite, Texture } from "pixi.js";
+import { AnimatedSprite, SCALE_MODES, Sprite, Text, Texture } from "pixi.js";
 import { assets } from "../..";
 import { DialogBox } from "../patterns/dialogBox";
 import { Level } from "../patterns/level";
@@ -6,9 +6,13 @@ import { Level } from "../patterns/level";
 export class DevTenemigsDialogBox extends DialogBox {
     #background: Sprite;
     #interactiveSprite: AnimatedSprite;
+    #displayText: Text;
 
     #interactiveSpriteTime: number = 20;
     #interactiveSpriteFrame: number = 0;
+
+    #displayTextTime: number = 5;
+    #displayTextLetter: number = 0;
 
     constructor(texts: string[]) {
         super({coordinate: {x: 0, y: 0}, width: 16*32, height: 2*32}, texts);
@@ -32,11 +36,14 @@ export class DevTenemigsDialogBox extends DialogBox {
         this.#interactiveSprite.anchor.set(2, 0.7)
         this.#interactiveSprite.x = this._coordinate.x + this._width;
         this.#interactiveSprite.y = this._coordinate.y + this._height;
+
+        this.#displayText = new Text('');
     }
 
     _addToStage(level: Level) {
         level.game.app.stage.addChild(this.#background);
         level.game.app.stage.addChild(this.#interactiveSprite);
+        level.game.app.stage.addChild(this.#displayText);
     }
 
     update(level: Level, delta: number) {
@@ -53,6 +60,8 @@ export class DevTenemigsDialogBox extends DialogBox {
             this.#interactiveSpriteFrame = (this.#interactiveSpriteFrame + 1) % 2;
             this.#interactiveSprite.currentFrame = this.#interactiveSpriteFrame;
         }
+
+        // this.#displayText.text +=
     }
 
     #updateInteraction(level: Level, delta: number) {
@@ -73,5 +82,6 @@ export class DevTenemigsDialogBox extends DialogBox {
     _removeToStage(level: Level) {
         level.game.app.stage.removeChild(this.#background);
         level.game.app.stage.removeChild(this.#interactiveSprite);
+        level.game.app.stage.removeChild(this.#displayText);
     }
 }
