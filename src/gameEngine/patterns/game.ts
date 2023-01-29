@@ -38,18 +38,25 @@ export class Game {
         this._levels = levels;
 
         //Initialisation des controlleurs
-        this._keys = { up: {pressed: false, clicked: false}, right: {pressed: false, clicked: false}, left: {pressed: false, clicked: false}, interaction: {pressed: false, clicked: false}, hit: {pressed: false, clicked: false}};
+        this._keys = { 
+            up: {pressed: false, clicked: false}, 
+            right: {pressed: false, clicked: false}, 
+            left: {pressed: false, clicked: false}, 
+            interaction: {pressed: false, clicked: false}, 
+            hit: {pressed: false, clicked: false}
+        };
+        
         document.addEventListener("keydown", (e: KeyboardEvent) => {
-            if(e.key === 'z') {
+            if(e.key === 'z' || e.key === 'Z') {
                 this.keys.up.pressed = true;
             }
-            if(e.key === 'q') {
+            if(e.key === 'q' || e.key === 'Q') {
                 this._keys.left.pressed = true;
             }
-            if(e.key === 'd') {
+            if(e.key === 'd'|| e.key === 'D') {
                 this._keys.right.pressed = true;
             }
-            if(e.key === 'e') {
+            if(e.key === 'e'|| e.key === 'E') {
                 this._keys.interaction.pressed = true;
             }
             if(e.key === ' ') {
@@ -59,16 +66,16 @@ export class Game {
         
 
         document.addEventListener("keyup", (e: KeyboardEvent) => {
-            if(e.key === 'z') {
+            if(e.key === 'z' || e.key === 'Z') {
                 this._keys.up.pressed = false;
             }
-            if(e.key === 'q') {
+            if(e.key === 'q' || e.key === 'Q') {
                 this._keys.left.pressed = false;
             }
-            if(e.key === 'd') {
+            if(e.key === 'd' || e.key === 'D') {
                 this._keys.right.pressed = false;
             }
-            if(e.key === "e") {
+            if(e.key === "e" || e.key === 'E') {
                 this._keys.interaction.pressed = false;
             }
             if(e.key === ' ') {
@@ -79,8 +86,14 @@ export class Game {
         //Boucle Pixi
         this._app.ticker.add((delta: number) => {
             this._elapsed += delta;
+            
             if(this._currentLevel !== null)
                 this._update(delta);
+            else {
+                this._currentLevel = this._levels[0];
+                this._currentLevel.addToStage(this);
+            }
+
             this._updateKeysClicked();
         });
     }
@@ -101,4 +114,4 @@ export class Game {
         this._keys.interaction.clicked = !this._keys.interaction.pressed;
         this._keys.hit.clicked = !this._keys.hit.pressed;
     }
-}
+};

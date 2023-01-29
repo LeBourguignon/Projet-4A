@@ -1,3 +1,4 @@
+import { Sound } from "@pixi/sound";
 import { AnimatedSprite, SCALE_MODES, Sprite, Text, Texture } from "pixi.js";
 import { assets } from "../..";
 import { DialogBox } from "../patterns/dialogBox";
@@ -13,6 +14,8 @@ export class DevTenemigsDialogBox extends DialogBox {
 
     #displayTextTime: number = 5;
     #displayTextLetter: number = 0;
+
+    #voice: Sound | null = null;
 
     constructor(texts: string[]) {
         super({coordinate: {x: 0, y: 0}, width: 16*32, height: 2*32}, texts);
@@ -38,12 +41,19 @@ export class DevTenemigsDialogBox extends DialogBox {
         this.#interactiveSprite.y = this._coordinate.y + this._height;
 
         this.#displayText = new Text('');
+
+        this.#voice = assets.tenemigs.tenemigsSoundVoice;
+        console.log(assets.adventurer);
     }
 
     _addToStage(level: Level) {
         level.game.app.stage.addChild(this.#background);
         level.game.app.stage.addChild(this.#interactiveSprite);
         level.game.app.stage.addChild(this.#displayText);
+
+        this.#displayText.text = '';
+        this.#displayTextTime = 5;
+        this.#displayTextLetter = 0;
     }
 
     update(level: Level, delta: number) {
@@ -61,14 +71,36 @@ export class DevTenemigsDialogBox extends DialogBox {
             this.#interactiveSprite.currentFrame = this.#interactiveSpriteFrame;
         }
 
-        // this.#displayText.text +=
+        if(this.#displayText.text != this._texts[this._stape]) {
+            this.#displayTextTime -= delta;
+
+            if(this.#displayTextTime < 0) {
+                this.#displayTextTime = 5;
+                this.#displayTextLetter++;
+                this.#displayText.text = this._texts[this._stape].substring(0, this.#displayTextLetter);
+                if(this._texts[this._stape].charCodeAt(this.#displayTextLetter) > 32) this.#voice.play();
+            }
+        }
     }
 
     #updateInteraction(level: Level, delta: number) {
         if(this._firstUpdate) this._firstUpdate = false;
         else {
             if(level.game.keys.interaction.pressed && level.game.keys.interaction.clicked) {
-                this.end(level);
+                if(this.#displayText.text != this._texts[this._stape]) {
+                    this.#displayTextTime = 0;
+                    this.#displayTextLetter = this._texts[this._stape].length - 1;
+                }
+                else {
+                    if(this._stape < this._texts.length - 1) {
+                        this._stape++;
+                        this.#displayText.text = '';
+                        this.#displayTextTime = 5;
+                        this.#displayTextLetter = 0;
+                    }
+                    else
+                        this.end(level);
+                }                
             }  
         }
     }

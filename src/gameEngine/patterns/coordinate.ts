@@ -1,6 +1,13 @@
-export type Coord = { x: number, y: number}
+export type Coord = { 
+    x: number, 
+    y: number
+};
 
-export type Rect = { coordinate: Coord, width: number, height: number }
+export type Rect = { 
+    coordinate: Coord, 
+    width: number, 
+    height: number 
+};
 
 export class Coordinate {
     #x: number;
@@ -16,4 +23,4 @@ export class Coordinate {
     
     set y(value: number) { this.#y = value; }
     get y(): number { return this.#y; }
-}
+};

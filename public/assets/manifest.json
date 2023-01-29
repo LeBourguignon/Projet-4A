@@ -237,6 +237,12 @@
                 {
                     "name" : "tenemigsRun05",
                     "srcs" : "assets/tenemigs/run/tenemigs-run-05.png"
+                },
+
+
+                {
+                    "name" : "tenemigsSoundVoice",
+                    "srcs" : "assets/tenemigs/sound/tenemigs-sound-voice.wav"
                 }
             ]
         },

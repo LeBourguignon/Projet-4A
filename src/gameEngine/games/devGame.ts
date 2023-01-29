@@ -7,9 +7,6 @@ import { Game } from "../patterns/game";
 export class DevGame extends Game {
     constructor(element: HTMLElement) {
         super(element, {width: 16*32, height: 9*32, resolution: 2}, [new DevLevel(1), new DevLevelInTheDarkness(2)]);
-        
-        this._currentLevel = this._levels[0];
-        this._currentLevel.addToStage(this);
     }
 
     _update(delta: number) {

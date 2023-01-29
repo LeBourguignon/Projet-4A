@@ -1,4 +1,4 @@
-import { Application, filters, Graphics, ICanvas, Rectangle, SCALE_MODES, Sprite, Texture } from "pixi.js";
+import { filters, Graphics, Rectangle, Sprite } from "pixi.js";
 import { Coordinate, Rect } from "./coordinate";
 import { HitBox} from "./hitBox";
 import { Player } from "../hitBox/player";
@@ -15,7 +15,7 @@ export type Map = {
     camCoordinate: Coordinate, 
     inTheDarkness?: boolean,
     theme?: Sound
-}
+};
 
 export class Level {
     _id: number;
@@ -132,4 +132,4 @@ export class Level {
         });
         
     }
-}
+};

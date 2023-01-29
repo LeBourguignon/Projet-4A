@@ -74,23 +74,15 @@ export class DevTenemigs extends HitBox {
         });
 
         this.#interactiveSprite = new AnimatedSprite(interactiveTextures);
-        this.#interactiveSprite.anchor.y = 1;
-        this.#interactiveSprite.visible = false;
+        this.#interactiveSprite.anchor.set(0.5, 1);
     }
 
     addToStage(level: Level) {
-        if(this.#showHitBox) {
-            this.#hitBox.x = this._coordinate.x + level.camCoordinate.x;
-            this.#hitBox.y = this._coordinate.y + level.camCoordinate.y;
+        this.#updateCoordinates(level, 0);
+
+        if(this.#showHitBox)
             level.game.app.stage.addChild(this.#hitBox);
-        }
-
-        this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x + this._width/2;
-        this.#animatedSprite.y = this._coordinate.y + level.camCoordinate.y;
         level.game.app.stage.addChild(this.#animatedSprite);
-
-        this.#interactiveSprite.x = this._coordinate.x + level.camCoordinate.x + this._width/2 - 6.5;
-        this.#interactiveSprite.y = this._coordinate.y + level.camCoordinate.y - 20;
         level.game.app.stage.addChild(this.#interactiveSprite);
     }
 
@@ -114,6 +106,9 @@ export class DevTenemigs extends HitBox {
         
         this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x + this._width/2;
         this.#animatedSprite.y = this._coordinate.y + level.camCoordinate.y;
+
+        this.#interactiveSprite.x = this._coordinate.x + level.camCoordinate.x + this._width/2;
+        this.#interactiveSprite.y = this._coordinate.y + level.camCoordinate.y - 20;
     }
 
     #updateAnimation(level: Level, delta: number) {

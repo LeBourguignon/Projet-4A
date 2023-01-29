@@ -29,6 +29,7 @@ export class DialogBox {
             this._isStarted = true;
             level.ongoingDialog = true;
             this._firstUpdate = true;
+            this._stape = 0;
         }
         else
             throw "Give text for the dialog box!"
@@ -51,4 +52,4 @@ export class DialogBox {
     _removeToStage(level: Level) {
         throw "Redefine the _removeToStage method!"
     }
-}
+};
