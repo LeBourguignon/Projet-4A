@@ -1,5 +1,5 @@
 import { filters, Graphics, Rectangle, Sprite } from "pixi.js";
-import { Coordinate, Rect } from "./coordinate";
+import { Coord, Coordinate, Rect } from "./coordinate";
 import { HitBox} from "./hitBox";
 import { Player } from "../hitBox/player";
 import { Game } from "./game";
@@ -12,7 +12,7 @@ export type Map = {
     drawables: HitBox[], 
     obstacles: HitBox[], 
     player: Player, 
-    camCoordinate: Coordinate, 
+    camCoordinate: Coord, 
     inTheDarkness?: boolean,
     theme?: Sound
 };
@@ -44,7 +44,7 @@ export class Level {
         this._drawables = map.drawables;
         this._player = map.player;
         this._obstacles = map.obstacles;
-        this._camCoordinate = map.camCoordinate;
+        this._camCoordinate = new Coordinate(map.camCoordinate);
 
         if(map.size) {
             this._size = map.size;
