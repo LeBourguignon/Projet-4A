@@ -78,6 +78,7 @@ export class Player extends HitBox {
         
         this.#animatedSprite = new AnimatedSprite(this.#textures);
         this.#animatedSprite.scale.set(resolution);
+        this.#animatedSprite.anchor.x = 0.5;
 
         this.#step1 = assets.adventurer.adventurerSoundStep00;
         this.#step2 = assets.adventurer.adventurerSoundStep01;
@@ -88,14 +89,11 @@ export class Player extends HitBox {
         this.#secondJump = true;
         this.#vy = 0;
 
+        this.#updateCoordinates(level, 0);
+
         if(this.#showHitBox) {
-            this.#hitBox.x = this._coordinate.x + level.camCoordinate.x;
-            this.#hitBox.y = this._coordinate.y + level.camCoordinate.y;
             level.game.app.stage.addChild(this.#hitBox);
         }
-        this.#animatedSprite.anchor.x = 0.5;
-        this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x + 8*(this._width/playerWidth);
-        this.#animatedSprite.y = this._coordinate.y + level.camCoordinate.y - 6*(this._height/playerHeight);
         level.game.app.stage.addChild(this.#animatedSprite);
     }
 

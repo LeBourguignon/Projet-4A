@@ -37,7 +37,7 @@ export class Game {
         //Initialisation des niveaux
         this._levels = levels;
 
-        //Initialisation des controlleurs
+        //Initialisation des controleurs
         this._keys = { 
             up: {pressed: false, clicked: false}, 
             right: {pressed: false, clicked: false}, 

@@ -12,7 +12,7 @@ buttonStartGameHTML.addEventListener('click', async () => {
 
     const bodyHTML = document.querySelector('body');
     const textHTML = document.createElement('p');
-    textHTML.textContent = "Chargement des ressources ...";
+    textHTML.textContent = "Chargement des ressources ... \n (Attention au son)";
     bodyHTML.append(textHTML);
 
     const manifest = await fetch('assets/manifest.json').then((res) => res.json());
