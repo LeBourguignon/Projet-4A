@@ -105,12 +105,6 @@ export class DevTenemigsDialogBox extends DialogBox {
         }
     }
 
-    end(level: Level) {
-        this._removeToStage(level);
-        this._isStarted = false;
-        level.ongoingDialog = false;
-    }
-
     _removeToStage(level: Level) {
         level.game.app.stage.removeChild(this.#background);
         level.game.app.stage.removeChild(this.#interactiveSprite);

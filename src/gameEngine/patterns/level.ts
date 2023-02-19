@@ -11,7 +11,7 @@ export type Map = {
     size?: Rect, 
     drawables: HitBox[], 
     obstacles: HitBox[], 
-    player: Player, 
+    player: HitBox, 
     camCoordinate: Coord, 
     inTheDarkness?: boolean,
     theme?: Sound
@@ -25,7 +25,7 @@ export class Level {
     _size: Rect;
     _drawables: HitBox[];
     _obstacles: HitBox[];
-    _player: Player;
+    _player: HitBox;
 
     _ongoingDialog: boolean;
 
@@ -66,8 +66,8 @@ export class Level {
 
     get drawables(): HitBox[] { return this._drawables; }
 
-    set player(value: Player) { this._player = value; }
-    get player(): Player { return this._player; }
+    set player(value: HitBox) { this._player = value; }
+    get player(): HitBox { return this._player; }
     
     get obstacles(): HitBox[] { return this._obstacles; }
 
