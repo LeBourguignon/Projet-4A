@@ -1,10 +1,11 @@
 import { Sound } from "@pixi/sound";
 import { AnimatedSprite, SCALE_MODES, Sprite, Text, Texture } from "pixi.js";
-import { assets } from "../..";
-import { DialogBox } from "../patterns/dialogBox";
-import { Level } from "../patterns/level";
+import { assets } from "../../../..";
+import { DialogBox } from "../../../patterns/dialogBox";
+import { Level } from "../../../patterns/level";
 
-export class DevTenemigsDialogBox extends DialogBox {
+
+export class TenemigsDialogBox extends DialogBox {
     #background: Sprite;
     #interactiveSprite: AnimatedSprite;
     #displayText: Text;
@@ -18,11 +19,9 @@ export class DevTenemigsDialogBox extends DialogBox {
     #voice: Sound | null = null;
 
     constructor(texts: string[]) {
-        super({coordinate: {x: 0, y: 0}, width: 16*32, height: 2*32}, texts);
+        super({coordinate: {x: 0, y: 0}, width: 16*64, height: 3*64}, texts);
 
-        const texture = Texture.from('assets/noManifest/dialogBox/background.png');
-        texture.baseTexture.scaleMode = SCALE_MODES.NEAREST;
-        this.#background = new Sprite(texture);
+        this.#background = new Sprite(assets.tenemigs.tenemigsDialogboxBackground);
         this.#background.x = this._coordinate.x;
         this.#background.y = this._coordinate.y;
 
@@ -36,11 +35,17 @@ export class DevTenemigsDialogBox extends DialogBox {
         });
 
         this.#interactiveSprite = new AnimatedSprite(interactiveTextures);
-        this.#interactiveSprite.anchor.set(2, 0.7)
-        this.#interactiveSprite.x = this._coordinate.x + this._width;
-        this.#interactiveSprite.y = this._coordinate.y + this._height;
+        this.#interactiveSprite.scale.set(2.5);
+        this.#interactiveSprite.anchor.set(2, 0.7);
+        this.#interactiveSprite.x = this._coordinate.x + this._width - 16;
+        this.#interactiveSprite.y = this._coordinate.y + this._height - 16;
 
         this.#displayText = new Text('');
+        // this.#displayText.width = this._width - 64;
+        // this.#displayText.height = this._height - 64;
+        this.#displayText.style.fontSize = 40;
+        this.#displayText.x = 32;
+        this.#displayText.y = 32;
 
         this.#voice = assets.tenemigs.tenemigsSoundVoice;
         console.log(assets.adventurer);

@@ -19,19 +19,41 @@ export class PlayerAndCamLevel extends Level {
         const floor2 = new Block({coordinate: {x: 0.5*16*64, y: 17*64}, width: 2.5*16*64, height: 64});
         const block21 = new Block({coordinate: {x: 26*64, y: 15*64}, width: 12*64, height: 16});
         const block22 = new Block({coordinate: {x: 10*64, y: 13*64}, width: 12*64, height: 16});
+
+        const block23 = new Block({coordinate: {x: 46*64, y: 15*64}, width: 2*64, height: 16});
+        const block24 = new Block({coordinate: {x: 43*64, y: 13*64}, width: 2*64, height: 16});
+        const block25 = new Block({coordinate: {x: 46*64, y: 11*64}, width: 2*64, height: 16});
+        const block26 = new Block({coordinate: {x: 43*64, y: 9*64}, width: 2*64, height: 16});
         
         const floor3 = new Block({coordinate: {x: 0, y: 26*64}, width: 4*16*64, height: 64});
         const block31 = new Block({coordinate: {x: 10*64, y: 24*64}, width: 12*64, height: 16});
         const block32 = new Block({coordinate: {x: 26*64, y: 22*64}, width: 12*64, height: 16});
+
+        const block33 = new Block({coordinate: {x: 0*64, y: 24*64}, width: 2*64, height: 16});
+        const block34 = new Block({coordinate: {x: 3*64, y: 22*64}, width: 2*64, height: 16});
+        const block35 = new Block({coordinate: {x: 0*64, y: 20*64}, width: 2*64, height: 16});
+        const block36 = new Block({coordinate: {x: 3*64, y: 18*64}, width: 2*64, height: 16});
 
         const wallRight = new Block({coordinate: {x: 3*16*64-16, y: 0}, width: 16, height: 2*9*64});
         const wallLeft = new Block({coordinate: {x: 0, y: 9*64}, width: 16, height: 2*9*64});
         
         super({
             size: {coordinate: {x: -16*64, y: 0}, width: 5*16*64, height: 3*9*64}, 
-            drawables: [background, floor1, block11, block12, floor2, block21, block22, floor3, block31, block32, wallRight, wallLeft, player], 
+            drawables: [
+                background, 
+                floor1, block11, block12, 
+                floor2, block21, block22, block23, block24, block25, block26, 
+                floor3, block31, block32, block33, block34, block35, block36,
+                wallRight, wallLeft, 
+                player
+            ], 
             player: player, 
-            obstacles: [floor1, block11, block12, floor2, block21, block22, floor3, block31, block32, wallRight, wallLeft], 
+            obstacles: [
+                floor1, block11, block12, 
+                floor2, block21, block22, block23, block24, block25, block26, 
+                floor3, block31, block32, block33, block34, block35, block36, 
+                wallRight, wallLeft
+            ], 
             camCoordinate: new Coordinate({x: 0, y: 0}),
             theme: assets.theme.theme02
         }, id);

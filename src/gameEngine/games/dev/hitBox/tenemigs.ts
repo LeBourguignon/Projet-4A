@@ -1,16 +1,16 @@
-import { AnimatedSprite, Graphics, SCALE_MODES, Sprite, Texture } from "pixi.js";
-import { assets } from "../../..";
-import { DevTenemigsDialogBox } from "../../dialogBox/devTenemigsDialogBox";
-import { Coord } from "../../patterns/coordinate";
-import { HitBox } from "../../patterns/hitBox";
-import { Level } from "../../patterns/level";
+import { AnimatedSprite, Graphics, SCALE_MODES, Sprite } from "pixi.js";
+import { assets } from "../../../..";
+import { Coord } from "../../../patterns/coordinate";
+import { HitBox } from "../../../patterns/hitBox";
+import { Level } from "../../../patterns/level";
+import { TenemigsDialogBox } from "../dialogBox/tenemigsDialogBox";
 
-export const tenemigsWidth = 10;
-export const tenemigsHeight = 16;
+export const tenemigsWidth = 20;
+export const tenemigsHeight = 32;
 
 export const tenemigsSpriteTime = 25;
 
-export class DevTenemigs extends HitBox {
+export class Tenemigs extends HitBox {
 
     #showHitBox: boolean;
 
@@ -25,7 +25,7 @@ export class DevTenemigs extends HitBox {
     #interactiveSpriteTime: number = 20;
     #interactiveSpriteFrame: number = 0;
 
-    #dialogBox: DevTenemigsDialogBox | null = null;
+    #dialogBox: TenemigsDialogBox | null = null;
 
     constructor(coordinate: Coord, texts: string[] = [], showHitBox: boolean = false) {
         super({coordinate: coordinate, width: tenemigsWidth, height: tenemigsHeight});
@@ -39,7 +39,7 @@ export class DevTenemigs extends HitBox {
         }
 
         if(texts.length)
-            this.#dialogBox = new DevTenemigsDialogBox(texts);
+            this.#dialogBox = new TenemigsDialogBox(texts);
 
         const animatedTextures = [
             assets.tenemigs.tenemigsIdle00, // 0
@@ -62,6 +62,7 @@ export class DevTenemigs extends HitBox {
         });
 
         this.#animatedSprite = new AnimatedSprite(animatedTextures);
+        this.#animatedSprite.scale.set(2);
         this.#animatedSprite.anchor.x = 0.5;
 
         const interactiveTextures = [
@@ -74,6 +75,7 @@ export class DevTenemigs extends HitBox {
         });
 
         this.#interactiveSprite = new AnimatedSprite(interactiveTextures);
+        this.#interactiveSprite.scale.set(2);
         this.#interactiveSprite.anchor.set(0.5, 1);
     }
 
@@ -107,8 +109,8 @@ export class DevTenemigs extends HitBox {
         this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x + this._width/2;
         this.#animatedSprite.y = this._coordinate.y + level.camCoordinate.y;
 
-        this.#interactiveSprite.x = this._coordinate.x + level.camCoordinate.x + this._width/2;
-        this.#interactiveSprite.y = this._coordinate.y + level.camCoordinate.y - 20;
+        this.#interactiveSprite.x = this._coordinate.x - level.camCoordinate.x + this._width/2;
+        this.#interactiveSprite.y = level.player.coordinate.y - level.camCoordinate.y - 10;
     }
 
     #updateAnimation(level: Level, delta: number) {
@@ -139,7 +141,7 @@ export class DevTenemigs extends HitBox {
         }
 
         // Interactive
-        if(this.isOverlaid(level.player) && !this.#dialogBox.isStarted) {
+        if(this.isOverlaid(level.player) && this.#dialogBox && !this.#dialogBox.isStarted) {
             this.#interactiveSprite.visible = true;
             this.#interactiveSpriteTime -= delta;
 
