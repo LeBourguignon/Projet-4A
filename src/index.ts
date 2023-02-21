@@ -1,59 +1,31 @@
-import { Application } from 'pixi.js';
-import { DevLevel } from './gameEngine/levels/devLevel';
-import { DevLevelInTheDarkness } from './gameEngine/levels/devLevelInTheDarkness';
+import { Sound } from "@pixi/sound";
+import { Assets } from "pixi.js";
+import { DevGame } from "./gameEngine/games/dev/devGame";
 
-const windowSize = { width: 16*32, height: 9*32};
-//const windowSize = { width: 1920, height: 1080};
+export let assets: any;
 
-//Initialisation Pixi
-let app = new Application({ width: windowSize.width, height: windowSize.height, resolution: 2});
-document.body.appendChild(app.view as any);
+const buttonStartGameHTML = document.getElementById("startGame");
+buttonStartGameHTML.addEventListener('click', async () => {
+    buttonStartGameHTML.remove();
 
-//Initialisation gameEngine
-//var level = new DevLevel(app);
-var level = new DevLevelInTheDarkness(app);
+    const bodyHTML = document.querySelector('body');
+    const textHTML = document.createElement('p');
+    textHTML.textContent = "Chargement des ressources...   (Attention au son)";
+    bodyHTML.append(textHTML);
 
-//Initialisation controlleur
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
+    const manifest = await fetch('assets/manifest.json').then((res) => res.json());
 
-function keyDownHandler(e: KeyboardEvent) {
-    if(e.key === "ArrowUp" || e.key === 'z') {
-        level.keys.upPressed = true;
-    }
-    if(e.key === "ArrowDown" || e.key === 's') {
-        level.keys.downPressed = true;
-    }
-    if(e.key === "ArrowLeft" || e.key === 'q') {
-        level.keys.leftPressed = true;
-    }
-    if(e.key === "ArrowRight" || e.key === 'd') {
-        level.keys.rightPressed = true;
-    }
-    if(e.key === "Control" || e.key === "e") {
-        level.keys.interactionPressed = true;
-    }
-}
+    Assets.init({manifest: manifest});
+    assets = await Assets.loadBundle(['adventurer', 'keys', 'tenemigs', 'theme', 'light']);
 
-function keyUpHandler(e: KeyboardEvent) {
-    if(e.key === "ArrowUp" || e.key === 'z') {
-        level.keys.upPressed = false;
-    }
-    if(e.key === "ArrowDown" || e.key === 's') {
-        level.keys.downPressed = false;
-    }
-    if(e.key === "ArrowLeft" || e.key === 'q') {
-        level.keys.leftPressed = false;
-    }
-    if(e.key === "ArrowRight" || e.key === 'd') {
-        level.keys.rightPressed = false;
-    }
-    if(e.key === "Control" || e.key === "e") {
-        level.keys.interactionPressed = false;
-    }
-}
+    assets.theme.theme01.loop = true;
+    assets.theme.theme02.loop = true;
 
-//Boucle Pixi
-app.ticker.add((delta: number) => {
-  level.update(delta);
+    textHTML.remove();
+
+    const game = new DevGame(document.body);    
 });
+
+export function fixBug() {
+    Sound.from({url: ''})
+}

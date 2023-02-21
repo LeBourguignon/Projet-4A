@@ -1,7 +1,9 @@
+import { Sound } from "@pixi/sound";
 import { AnimatedSprite, Graphics, SCALE_MODES, Sprite, Texture } from "pixi.js";
-import { Coord, Coordinate } from "../coordinate";
-import { HitBox } from "../hitBox";
-import { Level } from "../level";
+import { assets } from "../..";
+import { Coord, Coordinate } from "../patterns/coordinate";
+import { HitBox } from "../patterns/hitBox";
+import { Level } from "../patterns/level";
 
 export const playerWidth = 16;
 export const playerHeight = 30;
@@ -22,7 +24,6 @@ export class Player extends HitBox {
     #vx: number = 0;
     #vy: number = 0;
     #secondJump: boolean = false;
-    #upClicked: boolean = false;
 
     #showHitBox: boolean;
 
@@ -35,8 +36,11 @@ export class Player extends HitBox {
     #spriteFrame: number = 0;
     #facingRight: boolean = true;
 
-    constructor(coordinate: Coord, showHitBox: boolean = false) {
-        super({coordinate: coordinate, width: playerWidth, height: playerHeight});
+    #step1: Sound | null = null;
+    #step2: Sound | null = null;
+
+    constructor(coordinate: Coord, resolution: number = 1, showHitBox: boolean = false) {
+        super({coordinate: coordinate, width: playerWidth*(resolution), height: playerHeight*(resolution)});
 
         this.#showHitBox = showHitBox;
         if(this.#showHitBox) {
@@ -46,25 +50,26 @@ export class Player extends HitBox {
                         .endFill();
         }
 
-        this.#textures = [Texture.from('assets/player/idle/adventurer-idle-00.png'),    // 0
-                    Texture.from('assets/player/idle/adventurer-idle-01.png'),          // 1
-                    Texture.from('assets/player/idle/adventurer-idle-02.png'),          // 2
-                    Texture.from('assets/player/idle/adventurer-idle-03.png'),          // 3
+        this.#textures = [
+                    assets.adventurer.adventurerIdle00, // 0
+                    assets.adventurer.adventurerIdle01, // 1
+                    assets.adventurer.adventurerIdle02, // 2
+                    assets.adventurer.adventurerIdle03, // 3
 
-                    Texture.from('assets/player/run/adventurer-run-00.png'),            // 4
-                    Texture.from('assets/player/run/adventurer-run-01.png'),            // 5
-                    Texture.from('assets/player/run/adventurer-run-02.png'),            // 6
-                    Texture.from('assets/player/run/adventurer-run-03.png'),            // 7
-                    Texture.from('assets/player/run/adventurer-run-04.png'),            // 8
-                    Texture.from('assets/player/run/adventurer-run-05.png'),            // 9
+                    assets.adventurer.adventurerRun00,  // 4
+                    assets.adventurer.adventurerRun01,  // 5
+                    assets.adventurer.adventurerRun02,  // 6
+                    assets.adventurer.adventurerRun03,  // 7
+                    assets.adventurer.adventurerRun04,  // 8
+                    assets.adventurer.adventurerRun05,  // 9
                 
-                    Texture.from('assets/player/jump/adventurer-jump-00.png'),          // 10
-                    Texture.from('assets/player/jump/adventurer-jump-01.png'),          // 11
-                    Texture.from('assets/player/jump/adventurer-jump-02.png'),          // 12
-                    Texture.from('assets/player/jump/adventurer-jump-03.png'),          // 13
+                    assets.adventurer.adventurerJump00, // 10
+                    assets.adventurer.adventurerJump01, // 11
+                    assets.adventurer.adventurerJump02, // 12
+                    assets.adventurer.adventurerJump03, // 13
 
-                    Texture.from('assets/player/fall/adventurer-fall-00.png'),          // 14
-                    Texture.from('assets/player/fall/adventurer-fall-01.png'),          // 15
+                    assets.adventurer.adventurerFall00, // 14
+                    assets.adventurer.adventurerFall01  // 15
                 ];
 
         this.#textures.forEach(texture => {
@@ -72,18 +77,24 @@ export class Player extends HitBox {
         });
         
         this.#animatedSprite = new AnimatedSprite(this.#textures);
+        this.#animatedSprite.scale.set(resolution);
+        this.#animatedSprite.anchor.x = 0.5;
+
+        this.#step1 = assets.adventurer.adventurerSoundStep00;
+        this.#step2 = assets.adventurer.adventurerSoundStep01;
     }
 
     addToStage(level: Level) {
+        this.#vx = 0;
+        this.#secondJump = true;
+        this.#vy = 0;
+
+        this.#updateCoordinates(level, 0);
+
         if(this.#showHitBox) {
-            this.#hitBox.x = this._coordinate.x + level.camCoordinate.x;
-            this.#hitBox.y = this._coordinate.y + level.camCoordinate.y;
-            level.app.stage.addChild(this.#hitBox);
+            level.game.app.stage.addChild(this.#hitBox);
         }
-        this.#animatedSprite.anchor.x = 0.5;
-        this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x + 8;
-        this.#animatedSprite.y = this._coordinate.y + level.camCoordinate.y - 6;
-        level.app.stage.addChild(this.#animatedSprite);
+        level.game.app.stage.addChild(this.#animatedSprite);
     }
 
     addLighting(level: Level, lighting: Graphics) {
@@ -101,22 +112,14 @@ export class Player extends HitBox {
     update(level: Level, delta: number) {
         this.#updateX(level, delta);
         this.#updateY(level, delta);
-        
-        if(this.#showHitBox) {
-            this.#hitBox.x = this._coordinate.x + level.camCoordinate.x;
-            this.#hitBox.y = this._coordinate.y + level.camCoordinate.y;
-        }
-        
-        this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x + 8;
-        this.#animatedSprite.y = this._coordinate.y + level.camCoordinate.y - 6;
-        
+        this.#updateCoordinates(level, delta);
         this.#updateAnimation(level, delta);
     }
 
     #updateX(level: Level, delta: number) {
-        if(level.keys.leftPressed && !level.keys.rightPressed)  // left
+        if(level.game.keys.left.pressed && !level.game.keys.right.pressed && !level.ongoingDialog)  // left
             this.#vx = -this.#speed;
-        else if(!level.keys.leftPressed && level.keys.rightPressed) // right
+        else if(!level.game.keys.left.pressed && level.game.keys.right.pressed && !level.ongoingDialog) // right
             this.#vx = this.#speed;
         else    // neutral
             this.#vx = 0;
@@ -146,7 +149,7 @@ export class Player extends HitBox {
                 this.#vy = 0;
             }
                 
-            if (level.keys.upPressed && this.#vy === 0) {
+            if (level.game.keys.up.pressed && this.#vy === 0 && !level.ongoingDialog) {
                 this.#vy = -this.#jumpBoost;
                 nextHitBox = new HitBox(this);
                 var i = 0, y0 = this._coordinate.y;
@@ -169,7 +172,7 @@ export class Player extends HitBox {
             }
         }
         else {  // In the void
-            if (this.#secondJump && this.#upClicked && level.keys.upPressed) {  // Double jump
+            if (this.#secondJump && level.game.keys.up.clicked && level.game.keys.up.pressed && !level.ongoingDialog) {  // Double jump
                 this.#vy = -this.#jumpBoost/2;
                 nextHitBox = new HitBox(this);
                 var i = 0, y0 = this._coordinate.y;
@@ -217,7 +220,16 @@ export class Player extends HitBox {
                 this.#vy += this.#weight*delta;
             }
         }
-        this.#upClicked = !level.keys.upPressed;
+    }
+    
+    #updateCoordinates(level: Level, delta: number) {
+        if(this.#showHitBox) {
+            this.#hitBox.x = this._coordinate.x + level.camCoordinate.x;
+            this.#hitBox.y = this._coordinate.y + level.camCoordinate.y;
+        }
+        
+        this.#animatedSprite.x = this._coordinate.x + level.camCoordinate.x + 8*(this._width/playerWidth);
+        this.#animatedSprite.y = this._coordinate.y + level.camCoordinate.y - 6*(this._height/playerHeight);
     }
 
     #updateAnimation(level: Level, delta: number) {
@@ -262,6 +274,7 @@ export class Player extends HitBox {
                 this.#spriteTime = playerSpriteTime / this.#speed;
                 this.#spriteFrame = 4;
                 this.#animatedSprite.currentFrame = this.#spriteFrame;
+                this.#step1.play();
             }
             else {
                 this.#spriteTime -= delta;
@@ -270,6 +283,9 @@ export class Player extends HitBox {
                     this.#spriteTime = playerSpriteTime / this.#speed;
                     this.#spriteFrame = (this.#spriteFrame - 4 + 1) % 6 + 4;
                     this.#animatedSprite.currentFrame = this.#spriteFrame;
+
+                    if(this.#spriteFrame == 4) this.#step1.play();
+                    if(this.#spriteFrame == 7) this.#step2.play();
                 }
             }
         }
