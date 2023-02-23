@@ -85,6 +85,7 @@ export class Level {
         });
 
         if(this._inTheDarkness) this._updateLights();
+        // else this._game._app.stage.mask = null;
         if(this._theme) this._theme.play();
     }
 
@@ -127,9 +128,9 @@ export class Level {
         
         this._focus = new Sprite(texture);
         
+        // this._game.app.stage.mask = this._focus;
         this._drawables.forEach(drawable => {
             drawable.setMask(this._focus);
         });
-        
     }
 };

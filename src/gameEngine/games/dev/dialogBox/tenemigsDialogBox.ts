@@ -48,7 +48,6 @@ export class TenemigsDialogBox extends DialogBox {
         this.#displayText.y = 32;
 
         this.#voice = assets.tenemigs.tenemigsSoundVoice;
-        console.log(assets.adventurer);
     }
 
     _addToStage(level: Level) {

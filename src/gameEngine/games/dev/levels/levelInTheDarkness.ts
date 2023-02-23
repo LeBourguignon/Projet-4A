@@ -107,7 +107,12 @@ export class LevelInTheDarkness extends Level {
 
                 else if(this._player.coordinate.x - this._camCoordinate.x > 12*64)
                     this._camCoordinate.x = this._player.coordinate.x - 12*64;
-            }             
+            }
+            else if(this._player.coordinate.x < 8*64)
+                this._camCoordinate.x = 0;
+
+            else if(this._player.coordinate.x >= 40*64)
+                this._camCoordinate.x = 32*64;        
         }
     }
 }
